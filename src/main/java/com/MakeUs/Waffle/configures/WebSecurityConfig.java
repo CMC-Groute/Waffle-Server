@@ -118,7 +118,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .mvcMatchers(
                         "/configuration/**",
-                        "/webjars/**"
+                        "/webjars/**",
+                        "/email/**"
                 );
     }
 
