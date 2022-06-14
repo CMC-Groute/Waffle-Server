@@ -24,6 +24,15 @@ public enum ErrorCode {
     CONFLICT_PASSWORD_ERROR(
             "잘못된 비밀번호입니다.",
             HttpStatus.CONFLICT.value()
+    ),
+    INVALID_EMAIL_ERROR(
+            "유효하지 않은 이메일코드 입니다.",
+            HttpStatus.BAD_REQUEST.value()
+    ),
+
+    NOT_FOUND_EMAIL_CODE(
+            "잘못된 이메일 인증코드 입니다.",
+            HttpStatus.CONFLICT.value()
     );
 
 
