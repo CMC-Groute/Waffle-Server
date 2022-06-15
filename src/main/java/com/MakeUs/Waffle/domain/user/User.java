@@ -70,4 +70,7 @@ public class User {
         }
     }
 
+    public void updateUserPasswordInfo(PasswordEncoder passwordEncoder, String newPassword){
+        this.password = passwordEncoder.encode(newPassword);
+    }
 }
