@@ -8,15 +8,22 @@ import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.MakeUs.Waffle.domain.Email.dto.TempPwRequest;
+import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
+import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailSendException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.MakeUs.Waffle.error.ErrorCode.NOT_FOUND_RESOURCE_ERROR;
 
 @Slf4j
 @Service
@@ -26,6 +33,8 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
     private final RedisTemplate<String, String> redisTemplate;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Long EXPIRATION = 180000L;
 
@@ -98,4 +107,35 @@ public class EmailService {
         }
     }
 
+    /*
+    임시비밀번호 발급
+     */
+    public void sendPassword(TempPwRequest temporaryPwRequest) {
+        User user = userRepository.findByEmail(temporaryPwRequest.getEmail()).orElseThrow(() -> new NotFoundUserException(NOT_FOUND_RESOURCE_ERROR));
+
+        final String code = getTempPassword();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(temporaryPwRequest.getEmail());
+        message.setFrom("Waffle");
+        message.setSubject("Waffle 임시 비밀번호 안내 이메일 입니다.");
+        message.setText(user.getNickname() +  " 의 임시 비밀번호는 " + code + "입니다.");
+
+        user.updateUserPasswordInfo(passwordEncoder,code);
+        emailSender.send(message);
+    }
+
+
+    public String getTempPassword() {
+        char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+        String str = "";
+
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+    }
 }
