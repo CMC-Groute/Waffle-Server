@@ -73,10 +73,14 @@ public class UserService {
     }
 
     @Transactional
-    public Long update(Long id, UserUpdateRequest userUpdateRequest)
-            throws IOException {
+    public Long update(Long id, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
-        userUpdateRequest.setProfileImage(userUpdateRequest.getStringProfileImage(user.getProfileImage()));
+        if (userUpdateRequest.getProfileImage() == null) {
+            userUpdateRequest.setProfileImage(userUpdateRequest.getStringProfileImage(user.getProfileImage()));
+        }
+        if (userUpdateRequest.getNickname() == null) {
+            userUpdateRequest.setNickname(user.getNickname());
+        }
         user.updateUserInfo(userUpdateRequest);
 
         return user.getId();

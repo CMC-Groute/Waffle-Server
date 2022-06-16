@@ -68,11 +68,11 @@ public class UserController {
     }
 
     //@Operation(summary = "회원수정 컨트롤러")
-    @PutMapping(value = "/users",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/users")
     public ResponseEntity<Long> update(
             @AuthenticationPrincipal JwtAuthentication token,
-            @Valid @RequestPart UserUpdateRequest userUpdateRequest
-    ) throws IOException {
+            @Valid @RequestBody UserUpdateRequest userUpdateRequest
+    ){
         return ResponseEntity.ok(userService.update(
                 token.getId(),
                 userUpdateRequest

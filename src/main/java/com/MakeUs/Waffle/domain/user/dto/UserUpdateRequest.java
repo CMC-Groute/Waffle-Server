@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 public class UserUpdateRequest {
 
     @Size(max = 6)
-    @NotBlank(message = "닉네임을 입력해 주세요.")
     private String nickname;
 
     private String profileImage;
@@ -25,6 +24,10 @@ public class UserUpdateRequest {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public ProfileImage getEnumProfileImage(String profileImage) {
