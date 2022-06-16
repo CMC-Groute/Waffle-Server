@@ -35,7 +35,8 @@ public class User {
 
     private String password;
 
-    private String profileImage;
+    @Enumerated(EnumType.STRING)
+    private ProfileImage profileImage;
 
     @Column(nullable = false, columnDefinition = "TINYINT default false")
     private boolean isDeleted;
@@ -43,7 +44,7 @@ public class User {
     private boolean isAgreedMarketing;
 
     @Builder
-    public User(Long id, String nickname, String email, String password, String profileImage, boolean isDeleted, boolean isAgreedMarketing) {
+    public User(Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
