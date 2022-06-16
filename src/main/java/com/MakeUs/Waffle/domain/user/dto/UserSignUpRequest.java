@@ -22,14 +22,14 @@ public class UserSignUpRequest {
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해 주세요.")
-    @Size(min = 8, message = "비밀번호는 최소 6글자 이상입니다.")
+    @Size(min = 6, message = "비밀번호는 최소 6글자 이상입니다.")
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9]).{6,20}$", message = "비밀번호는 숫자,영문을 조합해야 합니다.")
     private String password;
 
     @NotBlank(message = "비밀번호를 입력해 주세요.")
     private String checkPassword;
 
-    @Size(max = 12)
+    @Size(max = 6)
     @NotBlank(message = "닉네임을 입력해 주세요.")
     private String nickname;
 

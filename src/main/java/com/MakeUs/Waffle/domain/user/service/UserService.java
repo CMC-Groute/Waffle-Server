@@ -1,7 +1,9 @@
 package com.MakeUs.Waffle.domain.user.service;
 
 import com.MakeUs.Waffle.domain.user.User;
+import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
+import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.domain.user.exception.DuplicateUserException;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
@@ -11,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -54,43 +60,6 @@ public class UserService {
                 .getId();
     }
 
-
-
-//    @Transactional(readOnly = true)
-//    public UserResponse findUser(Long id) {
-//        return findActiveUser(id).toResponse();
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public Optional<User> findUserByProviderAndProviderId(String provider, String providerId) {
-//        return userRepository.findByProviderAndProviderId(
-//                provider,
-//                providerId
-//        );
-//    }
-//
-//    @Transactional
-//    public Long updatePassword(Long id, UserPasswordRequest userPasswordRequest){
-//        User user = findActiveUser(id);
-//        user.checkPassword(passwordEncoder,userPasswordRequest.getNowPassword());
-//        if(!userPasswordRequest.isDifferentPassword()){
-//            user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest);
-//        }
-//        return user.getId();
-//    }
-//
-//    @Transactional
-//    public Long delete(Long id) {
-//        userRepository.deleteById(findActiveUser(id).getId());
-//        return id;
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public User findActiveUser(Long id) {
-//        return userRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
-//    }
-
     @Transactional(readOnly = true)
     public boolean isValidEmail(String email){
         checkArgument(isNotEmpty(email),"이메일은 작성해야 합니다.");
@@ -102,5 +71,29 @@ public class UserService {
             throw new DuplicateUserException(ErrorCode.CONFLICT_VALUE_ERROR);
         }
         return false;
+    }
+
+    @Transactional
+    public Long update(Long id, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        if (userUpdateRequest.getProfileImage() == null) {
+            userUpdateRequest.setProfileImage(userUpdateRequest.getStringProfileImage(user.getProfileImage()));
+        }
+        if (userUpdateRequest.getNickname() == null) {
+            userUpdateRequest.setNickname(user.getNickname());
+        }
+        user.updateUserInfo(userUpdateRequest);
+
+        return user.getId();
+    }
+
+    @Transactional
+    public Long updatePassword(Long id, UserPasswordRequest userPasswordRequest){
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        user.checkPassword(passwordEncoder,userPasswordRequest.getNowPassword());
+        if(!userPasswordRequest.isDifferentPassword()){
+            user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());
+        }
+        return user.getId();
     }
 }

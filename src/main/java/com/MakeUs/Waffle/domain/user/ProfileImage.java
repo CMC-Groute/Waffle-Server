@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ProfileImage {
-    INITIAL("INITIAL");
+    INITIAL("INITIAL"),
+    TWO("TWO");
 
     private String profileImage;
 
