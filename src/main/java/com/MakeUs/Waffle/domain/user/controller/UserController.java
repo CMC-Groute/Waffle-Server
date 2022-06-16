@@ -3,10 +3,7 @@ package com.MakeUs.Waffle.domain.user.controller;
 import javax.validation.Valid;
 
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.dto.UserSignInRequest;
-import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
-import com.MakeUs.Waffle.domain.user.dto.UserToken;
-import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
+import com.MakeUs.Waffle.domain.user.dto.*;
 import com.MakeUs.Waffle.domain.user.service.UserService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.jwt.JwtAuthenticationToken;
@@ -76,6 +73,18 @@ public class UserController {
         return ResponseEntity.ok(userService.update(
                 token.getId(),
                 userUpdateRequest
+        ));
+    }
+
+   // @Operation(summary = "회원수정(비밀번호) 컨트롤러")
+    @PutMapping("/users/password")
+    public ResponseEntity<Long> updatePassword(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestBody UserPasswordRequest userPasswordRequest
+    ){
+        return ResponseEntity.ok(userService.updatePassword(
+                token.getId(),
+                userPasswordRequest
         ));
     }
 }

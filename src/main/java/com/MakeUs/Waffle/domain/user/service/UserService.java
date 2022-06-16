@@ -1,6 +1,7 @@
 package com.MakeUs.Waffle.domain.user.service;
 
 import com.MakeUs.Waffle.domain.user.User;
+import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.domain.user.exception.DuplicateUserException;
@@ -83,6 +84,16 @@ public class UserService {
         }
         user.updateUserInfo(userUpdateRequest);
 
+        return user.getId();
+    }
+
+    @Transactional
+    public Long updatePassword(Long id, UserPasswordRequest userPasswordRequest){
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        user.checkPassword(passwordEncoder,userPasswordRequest.getNowPassword());
+        if(!userPasswordRequest.isDifferentPassword()){
+            user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());
+        }
         return user.getId();
     }
 }
