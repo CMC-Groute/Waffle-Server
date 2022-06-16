@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.dto.UserSignInRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserToken;
+import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.domain.user.service.UserService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.jwt.JwtAuthenticationToken;
@@ -14,10 +15,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Validated
 @RestController
@@ -66,4 +67,15 @@ public class UserController {
         return ResponseEntity.ok(userService.signUp(userSignUpRequest));
     }
 
+    //@Operation(summary = "회원수정 컨트롤러")
+    @PutMapping(value = "/users",consumes = {"multipart/form-data"})
+    public ResponseEntity<Long> update(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestPart UserUpdateRequest userUpdateRequest
+    ) throws IOException {
+        return ResponseEntity.ok(userService.update(
+                token.getId(),
+                userUpdateRequest
+        ));
+    }
 }

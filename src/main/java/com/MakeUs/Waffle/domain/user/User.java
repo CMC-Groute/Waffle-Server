@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.user;
 
+import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.domain.user.exception.NotSamePasswordException;
 import com.MakeUs.Waffle.error.ErrorCode;
 import lombok.AccessLevel;
@@ -73,5 +74,10 @@ public class User {
 
     public void updateUserPasswordInfo(PasswordEncoder passwordEncoder, String newPassword){
         this.password = passwordEncoder.encode(newPassword);
+    }
+
+    public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
+        this.nickname = userUpdateRequest.getNickname();
+        this.profileImage = userUpdateRequest.getEnumProfileImage(userUpdateRequest.getProfileImage());
     }
 }
