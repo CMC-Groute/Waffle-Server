@@ -3,10 +3,10 @@ package com.MakeUs.Waffle.domain.invitation.service;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
@@ -63,5 +63,21 @@ public class InvitationService {
             str += charSet[idx];
         }
         return str;
+    }
+
+    @Transactional
+    public Long inviteInvitation(Long userId, InvitationCodeRequest invitationCodeRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+
+        Invitation invitation = invitationRepository.findByInvitationCode(invitationCodeRequest.getInvitationCode())
+                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+
+        InvitationMember invitationMember = InvitationMember.builder()
+                .invitation(invitation)
+                .user(user)
+                .build();
+
+        return invitationMemberRepository.save(invitationMember).getId();
     }
 }

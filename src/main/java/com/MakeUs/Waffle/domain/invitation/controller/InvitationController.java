@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.invitation.controller;
 
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
@@ -29,4 +30,11 @@ public class InvitationController {
         return ResponseEntity.ok(invitationService.createInvitation(token.getId(),invitationCreateRequest));
     }
 
+    @PostMapping("/invitations/code")
+    public ResponseEntity<Long> inviteInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestBody InvitationCodeRequest invitationCodeRequest
+    ) {
+        return ResponseEntity.ok(invitationService.inviteInvitation(token.getId(),invitationCodeRequest));
+    }
 }
