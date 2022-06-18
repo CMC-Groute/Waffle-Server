@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.user;
 
+import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.domain.user.exception.NotSamePasswordException;
 import com.MakeUs.Waffle.error.ErrorCode;
@@ -19,8 +20,7 @@ import java.util.List;
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class User {
-
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
