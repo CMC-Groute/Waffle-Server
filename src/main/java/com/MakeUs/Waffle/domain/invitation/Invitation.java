@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.invitation;
 
+import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.user.User;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import java.util.List;
 @Table(name = "invitation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Invitation {
+public class Invitation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.placeLikes;
 
+import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.place.Place;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "place_like")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlaceLike {
+public class PlaceLike extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
