@@ -93,14 +93,6 @@ public class InvitationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
 
-//        List<InvitationMember> invitationMembers = invitationMemberRepository.findByUserId(userId);
-//        List<InvitationListResponse> invitationDetailResponses = new ArrayList<>();
-//        for (InvitationMember invitationMember : invitationMembers) {
-//            invitationDetailResponses.add(invitationMember.getInvitation().toInvitationDetailResponse());
-//        }
-//
-//        return invitationDetailResponses;
-
         List<Invitation> invitations = invitationRepository.getByUser(userId);
         return invitations.stream().map(Invitation::toInvitationDetailResponse).collect(toList());
     }
