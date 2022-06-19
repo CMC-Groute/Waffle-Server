@@ -5,6 +5,7 @@ import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberReposi
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
@@ -13,6 +14,12 @@ import com.MakeUs.Waffle.error.ErrorCode;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Getter
@@ -79,5 +86,22 @@ public class InvitationService {
                 .build();
 
         return invitationMemberRepository.save(invitationMember).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<InvitationListResponse> findInvitationsByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+
+//        List<InvitationMember> invitationMembers = invitationMemberRepository.findByUserId(userId);
+//        List<InvitationListResponse> invitationDetailResponses = new ArrayList<>();
+//        for (InvitationMember invitationMember : invitationMembers) {
+//            invitationDetailResponses.add(invitationMember.getInvitation().toInvitationDetailResponse());
+//        }
+//
+//        return invitationDetailResponses;
+
+        List<Invitation> invitations = invitationRepository.getByUser(userId);
+        return invitations.stream().map(Invitation::toInvitationDetailResponse).collect(toList());
     }
 }

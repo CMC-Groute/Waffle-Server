@@ -2,7 +2,7 @@ package com.MakeUs.Waffle.domain.invitation;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
-import com.MakeUs.Waffle.domain.user.User;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,6 +56,15 @@ public class Invitation extends BaseEntity {
     public Invitation addMissions(List<InvitationMember> invitationMembers) {
         invitationMembers.forEach(this::addInvitationMember);
         return this;
+    }
+
+    public InvitationListResponse toInvitationDetailResponse() {
+        return InvitationListResponse.builder()
+                .invitationPlace(invitationPlace)
+                .comment(comment)
+                .date(date)
+                .title(title)
+                .build();
     }
 
 }
