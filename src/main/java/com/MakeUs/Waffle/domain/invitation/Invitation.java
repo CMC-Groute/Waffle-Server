@@ -3,6 +3,7 @@ package com.MakeUs.Waffle.domain.invitation;
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,6 +38,9 @@ public class Invitation extends BaseEntity {
     @OneToMany(mappedBy = "invitation", orphanRemoval = true)
     private List<InvitationMember> invitationMembers;
 
+    @OneToMany(mappedBy = "invitation", orphanRemoval = true)
+    private List<InvitationPlaceCategory> invitationPlaceCategories;
+
     @Builder
     public Invitation(Long id, String title, LocalDateTime date, String comment, String invitationCode, String invitationPlace, Long organizerId) {
         this.id = id;
@@ -53,8 +57,18 @@ public class Invitation extends BaseEntity {
         invitationMember.setInvitation(this);
     }
 
-    public Invitation addMissions(List<InvitationMember> invitationMembers) {
+    public Invitation addInvitationMembers(List<InvitationMember> invitationMembers) {
         invitationMembers.forEach(this::addInvitationMember);
+        return this;
+    }
+
+    public void addInvitationCategory(InvitationPlaceCategory invitationPlaceCategory) {
+        this.invitationPlaceCategories.add(invitationPlaceCategory);
+        invitationPlaceCategory.setInvitation(this);
+    }
+
+    public Invitation addInvitationCategories(List<InvitationPlaceCategory> invitationPlaceCategories) {
+        invitationPlaceCategories.forEach(this::addInvitationCategory);
         return this;
     }
 
