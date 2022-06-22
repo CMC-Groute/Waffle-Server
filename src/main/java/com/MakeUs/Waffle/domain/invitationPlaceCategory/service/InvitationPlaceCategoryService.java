@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
@@ -14,6 +15,7 @@ import com.MakeUs.Waffle.error.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,17 +33,18 @@ public class InvitationPlaceCategoryService {
 
 
     @Transactional
-    public String addInvitationPlaceCategory(Long userId, Long invitationId, CreatePlaceCategoryRequest createPlaceCategoryRequest) {
+    public List<CreatePlaceCategoryResponse> addInvitationPlaceCategory(Long userId, Long invitationId, CreatePlaceCategoryRequest createPlaceCategoryRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
 
-
+        List<CreatePlaceCategoryResponse> createPlaceCategoryResponses = new ArrayList<>();
         Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
         for (PlaceCategory placeCategory : createPlaceCategoryRequest.getEnumPlaceCategory(createPlaceCategoryRequest.getPlaceCategories())) {
             InvitationPlaceCategory invitationPlaceCategory = InvitationPlaceCategory.builder().placeCategory(placeCategory).invitation(invitation).build();
-            invitationPlaceCategoryRepository.save(invitationPlaceCategory);
+            InvitationPlaceCategory save = invitationPlaceCategoryRepository.save(invitationPlaceCategory);
+            createPlaceCategoryResponses.add(save.toCreatePlaceCategoryResponse());
         }
 
-        return "생성완료";
+        return createPlaceCategoryResponses;
     }
 }
