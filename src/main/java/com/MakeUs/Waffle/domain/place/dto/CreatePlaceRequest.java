@@ -30,6 +30,7 @@ public class CreatePlaceRequest {
                 .roadNameAddress(roadNameAddress)
                 .link(link)
                 .title(title)
+                .isDecision(false)
                 .invitation(invitation)
                 .build();
     }

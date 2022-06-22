@@ -8,6 +8,7 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
+import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.CreatePlaceRequest;
 import com.MakeUs.Waffle.domain.place.exception.WrongUserException;
 import com.MakeUs.Waffle.domain.place.repository.PlaceRepository;
@@ -55,5 +56,15 @@ public class PlaceService {
             throw new WrongUserException(ErrorCode.INVALID_INPUT_ERROR);
         }
         return false;
+    }
+
+    @Transactional
+    public Long decidePlace(Long userId, Long placeId, Long invitationId) {
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId).orElseThrow(()->new WrongUserException(ErrorCode.INVALID_INPUT_ERROR));
+
+        place.decidePlace();
+        System.out.println(place.getIsDecision());
+        return placeId;
     }
 }

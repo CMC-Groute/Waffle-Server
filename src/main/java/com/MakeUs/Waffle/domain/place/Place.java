@@ -27,6 +27,7 @@ public class Place extends BaseEntity {
 
     private String link;
 
+    @Column(nullable = false, columnDefinition = "TINYINT default false")
     private Boolean isDecision;
 
     private Long seq;
@@ -67,5 +68,9 @@ public class Place extends BaseEntity {
     public Place addPlaceLikes(List<PlaceLike> placeLikes) {
         placeLikes.forEach(this::addPlaceLike);
         return this;
+    }
+
+    public void decidePlace(){
+        this.isDecision = true;
     }
 }
