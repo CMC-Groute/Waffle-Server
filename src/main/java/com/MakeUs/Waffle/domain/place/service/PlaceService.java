@@ -62,9 +62,8 @@ public class PlaceService {
     public Long decidePlace(Long userId, Long placeId, Long invitationId) {
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
         invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId).orElseThrow(()->new WrongUserException(ErrorCode.INVALID_INPUT_ERROR));
-
-        place.decidePlace();
-        System.out.println(place.getIsDecision());
+        List<Place> decidedPlace = placeRepository.getByInvitationIdAndIsDecisionTrue(invitationId);
+        place.decidePlace((long) (decidedPlace.size()+1));
         return placeId;
     }
 

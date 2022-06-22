@@ -70,11 +70,13 @@ public class Place extends BaseEntity {
         return this;
     }
 
-    public void decidePlace(){
+    public void decidePlace(Long seq){
         this.isDecision = true;
+        this.seq = seq;
     }
 
     public void cancelDecidePlace() {
         this.isDecision = false;
+        this.seq = null;
     }
 }
