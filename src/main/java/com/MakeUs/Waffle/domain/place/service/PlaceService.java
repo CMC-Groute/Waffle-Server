@@ -67,4 +67,13 @@ public class PlaceService {
         System.out.println(place.getIsDecision());
         return placeId;
     }
+
+    @Transactional
+    public Long cancelDecidePlace(Long userId, Long placeId, Long invitationId) {
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId).orElseThrow(()->new WrongUserException(ErrorCode.INVALID_INPUT_ERROR));
+
+        place.cancelDecidePlace();
+        return placeId;
+    }
 }

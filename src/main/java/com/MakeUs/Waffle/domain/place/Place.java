@@ -73,4 +73,8 @@ public class Place extends BaseEntity {
     public void decidePlace(){
         this.isDecision = true;
     }
+
+    public void cancelDecidePlace() {
+        this.isDecision = false;
+    }
 }

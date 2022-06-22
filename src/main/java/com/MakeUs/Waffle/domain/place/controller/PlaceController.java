@@ -38,7 +38,15 @@ public class PlaceController {
             @AuthenticationPrincipal JwtAuthentication token
     ){
         return ResponseEntity.ok(placeService.decidePlace(token.getId(),placeId,invitationId));
-
     }
 
+    //@Operation("summary = "장소 확정 취소하기")
+    @DeleteMapping("/invitations/{invitationId}/place/{id}")
+    public ResponseEntity<Long> cancelDecidePlace(
+            @PathVariable("invitationId") Long invitationId,
+            @PathVariable("id") Long placeId,
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        return ResponseEntity.ok(placeService.cancelDecidePlace(token.getId(),placeId,invitationId));
+    }
 }
