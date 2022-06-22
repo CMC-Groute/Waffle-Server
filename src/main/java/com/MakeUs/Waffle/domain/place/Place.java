@@ -2,6 +2,7 @@ package com.MakeUs.Waffle.domain.place;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class Place extends BaseEntity {
 
     private String link;
 
+    @Column(nullable = false, columnDefinition = "TINYINT default false")
     private Boolean isDecision;
 
     private Long seq;
@@ -67,5 +69,26 @@ public class Place extends BaseEntity {
     public Place addPlaceLikes(List<PlaceLike> placeLikes) {
         placeLikes.forEach(this::addPlaceLike);
         return this;
+    }
+
+    public void decidePlace(Long seq){
+        this.isDecision = true;
+        this.seq = seq;
+    }
+
+    public void cancelDecidePlace() {
+        this.isDecision = false;
+        this.seq = null;
+    }
+
+    public void updateSeq(Long seq){
+        this.seq = seq;
+    }
+
+    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
+        return DecidedPlaceDetailResponse.builder()
+                .seq(seq)
+                .title(title)
+                .build();
     }
 }
