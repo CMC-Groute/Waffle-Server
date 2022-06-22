@@ -7,8 +7,11 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.exception.DuplicatePlaceCategoryException;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.user.User;
+import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
+import com.MakeUs.Waffle.domain.user.exception.DuplicateUserException;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
@@ -40,6 +43,9 @@ public class InvitationPlaceCategoryService {
         List<CreatePlaceCategoryResponse> createPlaceCategoryResponses = new ArrayList<>();
         Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
         for (PlaceCategory placeCategory : createPlaceCategoryRequest.getEnumPlaceCategory(createPlaceCategoryRequest.getPlaceCategories())) {
+            if(invitationPlaceCategoryRepository.getByInvitationAndPlaceCategory(invitation,placeCategory)!= null){
+                throw new DuplicatePlaceCategoryException(ErrorCode.CONFLICT_VALUE_ERROR);
+            }
             InvitationPlaceCategory invitationPlaceCategory = InvitationPlaceCategory.builder().placeCategory(placeCategory).invitation(invitation).build();
             InvitationPlaceCategory save = invitationPlaceCategoryRepository.save(invitationPlaceCategory);
             createPlaceCategoryResponses.add(save.toCreatePlaceCategoryResponse());
