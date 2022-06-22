@@ -4,6 +4,7 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryR
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
 import com.MakeUs.Waffle.domain.place.dto.CreatePlaceRequest;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.UpdateDecidePlaceRequest;
 import com.MakeUs.Waffle.domain.place.service.PlaceService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import org.springframework.http.ResponseEntity;
@@ -59,5 +60,15 @@ public class PlaceController {
             @AuthenticationPrincipal JwtAuthentication token
     ){
         return ResponseEntity.ok(placeService.getDecidedPlace(token.getId(),invitationId));
+    }
+
+    //@Operation("summary = "확정된 장소 조회하기")
+    @PutMapping("/invitations/{invitationId}")
+    public ResponseEntity<List<DecidedPlaceDetailResponse>> updateDecidedPlaceSeq(
+            @PathVariable("invitationId") Long invitationId,
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestBody UpdateDecidePlaceRequest updateDecidePlaceRequest
+    ){
+        return ResponseEntity.ok(placeService.updateDecidedPlaceSeq(token.getId(),invitationId,updateDecidePlaceRequest));
     }
 }

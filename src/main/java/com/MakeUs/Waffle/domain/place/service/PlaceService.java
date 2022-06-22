@@ -7,6 +7,8 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPla
 import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.CreatePlaceRequest;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.PlaceSeqDto;
+import com.MakeUs.Waffle.domain.place.dto.UpdateDecidePlaceRequest;
 import com.MakeUs.Waffle.domain.place.exception.WrongUserException;
 import com.MakeUs.Waffle.domain.place.repository.PlaceRepository;
 import com.MakeUs.Waffle.domain.user.User;
@@ -17,6 +19,7 @@ import lombok.Builder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,5 +83,22 @@ public class PlaceService {
 
         List<Place> places = placeRepository.getByInvitationAndIsDecisionTrueOrderBySeq(invitation);
         return places.stream().map(Place::toDecidedPlaceDetailResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<DecidedPlaceDetailResponse> updateDecidedPlaceSeq(
+            Long userId,Long invitationId, UpdateDecidePlaceRequest updateDecidePlaceRequest
+    ) {
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId).orElseThrow(()->new WrongUserException(ErrorCode.INVALID_INPUT_ERROR));
+        List<Place> places = new ArrayList<>();
+        for (PlaceSeqDto placeSeqDto : updateDecidePlaceRequest.getPlaceSeqDtos()) {
+            Place place = placeRepository.findById(placeSeqDto.getPlaceId()).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+            place.updateSeq(placeSeqDto.getSeq());
+            places.add(place);
+        }
+
+        return places.stream()
+                .map(Place::toDecidedPlaceDetailResponse)
+                .collect(Collectors.toList());
     }
 }

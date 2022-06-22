@@ -81,6 +81,10 @@ public class Place extends BaseEntity {
         this.seq = null;
     }
 
+    public void updateSeq(Long seq){
+        this.seq = seq;
+    }
+
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
         return DecidedPlaceDetailResponse.builder()
                 .seq(seq)
