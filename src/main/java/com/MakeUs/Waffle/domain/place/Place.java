@@ -4,6 +4,7 @@ import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +27,13 @@ public class Place extends BaseEntity {
 
     private String link;
 
-    private Boolean isDeleted;
+    private Boolean isDecision;
 
     private Long seq;
+
+    private String roadNameAddress;
+
+    private Long placeCategoryId;
 
     //좌표
     //도로명주소
@@ -39,6 +44,20 @@ public class Place extends BaseEntity {
 
     @OneToMany(mappedBy = "place", orphanRemoval = true)
     private List<PlaceLike> placeLikes = new ArrayList<>();
+
+    @Builder
+    public Place(Long id, String title, String comment, String link, Boolean isDecision, Long seq, String roadNameAddress, Long placeCategoryId, Invitation invitation, List<PlaceLike> placeLikes) {
+        this.id = id;
+        this.title = title;
+        this.comment = comment;
+        this.link = link;
+        this.isDecision = isDecision;
+        this.seq = seq;
+        this.roadNameAddress = roadNameAddress;
+        this.placeCategoryId = placeCategoryId;
+        this.invitation = invitation;
+        this.placeLikes = placeLikes;
+    }
 
     public void addPlaceLike(PlaceLike placeLike) {
         this.placeLikes.add(placeLike);
