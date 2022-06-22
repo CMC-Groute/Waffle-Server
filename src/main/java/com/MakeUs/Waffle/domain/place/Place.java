@@ -2,6 +2,7 @@ package com.MakeUs.Waffle.domain.place;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -78,5 +79,12 @@ public class Place extends BaseEntity {
     public void cancelDecidePlace() {
         this.isDecision = false;
         this.seq = null;
+    }
+
+    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
+        return DecidedPlaceDetailResponse.builder()
+                .seq(seq)
+                .title(title)
+                .build();
     }
 }

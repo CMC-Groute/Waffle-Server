@@ -3,13 +3,10 @@ package com.MakeUs.Waffle.domain.place.service;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
-import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
-import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
-import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
-import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.CreatePlaceRequest;
+import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.exception.WrongUserException;
 import com.MakeUs.Waffle.domain.place.repository.PlaceRepository;
 import com.MakeUs.Waffle.domain.user.User;
@@ -20,8 +17,8 @@ import lombok.Builder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaceService {
@@ -74,5 +71,14 @@ public class PlaceService {
 
         place.cancelDecidePlace();
         return placeId;
+    }
+
+    @Transactional
+    public List<DecidedPlaceDetailResponse> getDecidedPlace(Long userId, Long invitationId){
+        Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId).orElseThrow(()->new WrongUserException(ErrorCode.INVALID_INPUT_ERROR));
+
+        List<Place> places = placeRepository.getByInvitationAndIsDecisionTrueOrderBySeq(invitation);
+        return places.stream().map(Place::toDecidedPlaceDetailResponse).collect(Collectors.toList());
     }
 }
