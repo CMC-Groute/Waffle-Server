@@ -2,8 +2,12 @@ package com.MakeUs.Waffle.domain.invitation;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
+import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
+import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,12 +76,27 @@ public class Invitation extends BaseEntity {
         return this;
     }
 
-    public InvitationListResponse toInvitationDetailResponse() {
+    public InvitationListResponse toInvitationListResponse() {
         return InvitationListResponse.builder()
                 .invitationPlace(invitationPlace)
                 .comment(comment)
                 .date(date)
                 .title(title)
+                .build();
+    }
+
+    public InvitationDetailResponse toInvitationDetailResponse(List<InvitationMemberDto> invitationMemberDto,
+                                                               List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses,
+                                                               List<PlaceCategoryDto> placeCategoryDtos) {
+        return InvitationDetailResponse.builder()
+                .title(title)
+                .invitationMemberDto(invitationMemberDto)
+                .date(date)
+                .decidedPlaceDetailResponses(decidedPlaceDetailResponses)
+                .placeCategoryDto(placeCategoryDtos)
+                .comment(comment)
+                .waffleId(organizerId)
+                .invitationPlace(invitationPlace)
                 .build();
     }
 
