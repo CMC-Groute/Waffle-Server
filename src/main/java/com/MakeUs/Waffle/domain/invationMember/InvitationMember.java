@@ -1,6 +1,7 @@
 package com.MakeUs.Waffle.domain.invationMember;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
+import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.user.User;
 import lombok.AccessLevel;
@@ -41,5 +42,12 @@ public class InvitationMember extends BaseEntity {
                     .remove(this);
         }
         this.invitation = invitation;
+    }
+
+    public InvitationMemberDto toInvitationMemberDto() {
+        return InvitationMemberDto.builder()
+                .nickname(user.getNickname())
+                .userId(user.getId())
+                .build();
     }
 }

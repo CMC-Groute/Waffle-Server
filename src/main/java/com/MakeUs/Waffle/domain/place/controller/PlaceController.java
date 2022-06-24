@@ -54,7 +54,7 @@ public class PlaceController {
     }
 
     //@Operation("summary = "확정된 장소 조회하기")
-    @GetMapping("/invitations/{invitationId}")
+    @GetMapping("/invitations/{invitationId}/place")
     public ResponseEntity<List<DecidedPlaceDetailResponse>> getDecidedPlace(
             @PathVariable("invitationId") Long invitationId,
             @AuthenticationPrincipal JwtAuthentication token

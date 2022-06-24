@@ -3,6 +3,7 @@ package com.MakeUs.Waffle.domain.invitationPlaceCategory;
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,13 @@ public class InvitationPlaceCategory extends BaseEntity {
         return CreatePlaceCategoryResponse.builder()
                 .placeCategoryId(id)
                 .name(placeCategory.toString())
+                .build();
+    }
+
+    public PlaceCategoryDto toPlaceCategoryDto() {
+        return PlaceCategoryDto.builder()
+                .placeCategoryName(placeCategory.toString())
+                .placeCategoryId(id)
                 .build();
     }
 }

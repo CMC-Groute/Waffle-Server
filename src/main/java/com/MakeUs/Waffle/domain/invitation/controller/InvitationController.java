@@ -2,15 +2,13 @@ package com.MakeUs.Waffle.domain.invitation.controller;
 
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -47,5 +45,14 @@ public class InvitationController {
             @AuthenticationPrincipal JwtAuthentication token
     ) {
         return ResponseEntity.ok(invitationService.findInvitationsByUser(token.getId()));
+    }
+
+    //약속 상세조회
+    @GetMapping("/invitations/{invitationId}")
+    public ResponseEntity<InvitationDetailResponse> findDetailInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable("invitationId") Long invitationId
+            ) {
+        return ResponseEntity.ok(invitationService.getDetailInvitation(token.getId(),invitationId));
     }
 }
