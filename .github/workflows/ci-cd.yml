@@ -25,9 +25,9 @@ jobs:
     - name: 'Create env file'
       run: |
         touch .env
-        echo DB_URL=${{ secrets.ENV_DB_URL }} >> .env
-        echo DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} >> .env
-        echo DB_PWD=${{ secrets.ENV_DB_PWD }} >> .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+        echo DB_PWD=${{ secrets.DB_PWD }} >> .env
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
         echo MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} >> .env
         echo MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} >> .env
