@@ -57,4 +57,4 @@ jobs:
         key: ${{ secrets.AWS_SSH_KEY }}
         port: ${{ secrets.AWS_PORT }}
         script: |
-          ./deploy.sh
+          bash deploy.sh
