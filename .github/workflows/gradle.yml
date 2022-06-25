@@ -40,9 +40,10 @@ jobs:
         env:
           NAME: ${{ secrets.DOCKER_USERNAME }}  # DockerHub 계정 명
           REPO: waffle #  DockerHub 레포 이름
+          IMAGE: waffle-docker
         run: |
-          docker build --build-arg JAR_FILE=build/libs/\*.jar -t $NAME/$REPO .
-          docker tag $REPO:latest $NAME/$REPO:latest
+          docker build -t $IMAGE .
+          docker tag $IMAGE:latest $NAME/$REPO:latest
           docker push $NAME/$REPO:latest
 
         # EC2 Create 명령 실행
