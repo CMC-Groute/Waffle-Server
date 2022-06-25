@@ -41,7 +41,7 @@ jobs:
           NAME: ${{ secrets.DOCKER_USERNAME }}  # DockerHub 계정 명
           REPO: waffle #  DockerHub 레포 이름
         run: |
-          docker build -t $REPO .
+          docker build --build-arg JAR_FILE=build/libs/\*.jar -t $NAME/$REPO .
           docker tag $REPO:latest $NAME/$REPO:latest
           docker push $NAME/$REPO:latest
 
