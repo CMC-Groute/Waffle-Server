@@ -3,12 +3,13 @@ package com.MakeUs.Waffle.domain.Email.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.MakeUs.Waffle.domain.Email.EmailCode;
 import com.MakeUs.Waffle.domain.Email.dto.TempPwRequest;
+import com.MakeUs.Waffle.domain.Email.repository.EmailCodeRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
@@ -35,26 +36,35 @@ public class EmailService {
     private final RedisTemplate<String, String> redisTemplate;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailCodeRepository emailCodeRepository;
 
     private static final Long EXPIRATION = 180000L;
 
     public void sendMessage(String receiver) {
         final String code = createCode();
-        redisTemplate.opsForValue()
-                .set(
-                        "EC:" + receiver, code, EXPIRATION, TimeUnit.MILLISECONDS
-                );
+        EmailCode findEmailCode = emailCodeRepository.getByEmail(receiver);
+        if(findEmailCode == null){
+            EmailCode emailCode = EmailCode.builder()
+                    .email(receiver)
+                    .emailCode(code)
+                    .expiration(LocalDateTime.now().plusMinutes(3))
+                    .build();
+            emailCodeRepository.save(emailCode);
+
+        } else{
+            findEmailCode.changeEmailCode(code,LocalDateTime.now().plusMinutes(3));
+        }
         MimeMessage message = createMessage(receiver, code);
         emailSender.send(message);
     }
 
     public void verifyCode(String email, String code) {
-        String savedCode = redisTemplate.opsForValue().get("EC:" + email);
-
-        if (savedCode == null) {
+        //String savedCode = redisTemplate.opsForValue().get("EC:" + email);
+        EmailCode savedCode = emailCodeRepository.findByEmail(email).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_EMAIL_CODE));
+        if(savedCode.getExpiration().isBefore(LocalDateTime.now())){
             throw new NotFoundUserException(ErrorCode.INVALID_EMAIL_ERROR);
         }
-        if (!savedCode.equals(code)) {
+        if(!savedCode.getEmailCode().equals(code)){
             throw new NotFoundUserException(ErrorCode.NOT_FOUND_EMAIL_CODE);
         }
     }
