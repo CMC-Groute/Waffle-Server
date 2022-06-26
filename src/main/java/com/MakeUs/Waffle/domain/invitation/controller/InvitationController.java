@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
+import com.MakeUs.Waffle.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,35 +25,35 @@ public class InvitationController {
 
 
     @PostMapping("/invitations")
-    public ResponseEntity<Long> createInvitation(
+    public ResponseEntity<ApiResponse<Long>> createInvitation(
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody InvitationCreateRequest invitationCreateRequest
     ) {
-        return ResponseEntity.ok(invitationService.createInvitation(token.getId(),invitationCreateRequest));
+        return ResponseEntity.ok(ApiResponse.of(invitationService.createInvitation(token.getId(),invitationCreateRequest)));
     }
 
     @PostMapping("/invitations/code")
-    public ResponseEntity<Long> inviteInvitation(
+    public ResponseEntity<ApiResponse<Long>> inviteInvitation(
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody InvitationCodeRequest invitationCodeRequest
     ) {
-        return ResponseEntity.ok(invitationService.inviteInvitation(token.getId(),invitationCodeRequest));
+        return ResponseEntity.ok(ApiResponse.of(invitationService.inviteInvitation(token.getId(),invitationCodeRequest)));
     }
 
     //사용자 예정된 약속들 확인
     @GetMapping("/invitations")
-    public ResponseEntity<List<InvitationListResponse>> findInvitationByUser(
+    public ResponseEntity<ApiResponse<List<InvitationListResponse>>> findInvitationByUser(
             @AuthenticationPrincipal JwtAuthentication token
     ) {
-        return ResponseEntity.ok(invitationService.findInvitationsByUser(token.getId()));
+        return ResponseEntity.ok(ApiResponse.of(invitationService.findInvitationsByUser(token.getId())));
     }
 
     //약속 상세조회
     @GetMapping("/invitations/{invitationId}")
-    public ResponseEntity<InvitationDetailResponse> findDetailInvitation(
+    public ResponseEntity<ApiResponse<InvitationDetailResponse>> findDetailInvitation(
             @AuthenticationPrincipal JwtAuthentication token,
             @PathVariable("invitationId") Long invitationId
             ) {
-        return ResponseEntity.ok(invitationService.getDetailInvitation(token.getId(),invitationId));
+        return ResponseEntity.ok(ApiResponse.of(invitationService.getDetailInvitation(token.getId(),invitationId)));
     }
 }
