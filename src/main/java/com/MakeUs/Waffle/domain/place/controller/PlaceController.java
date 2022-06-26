@@ -7,6 +7,7 @@ import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.dto.UpdateDecidePlaceRequest;
 import com.MakeUs.Waffle.domain.place.service.PlaceService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
+import com.MakeUs.Waffle.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,51 +25,50 @@ public class PlaceController {
 
     //@Operation(summary = "장소 생성 ")
     @PostMapping("/invitations/{invitationId}/placeCategory/{id}/place")
-    public ResponseEntity<Long> singUp(
+    public ResponseEntity<ApiResponse<Long>> singUp(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("id") Long categoryId,
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody CreatePlaceRequest createPlaceRequest
     ) {
-        return ResponseEntity.ok(placeService.addPlace(token.getId(),invitationId,categoryId,createPlaceRequest));
+        return ResponseEntity.ok(ApiResponse.of(placeService.addPlace(token.getId(),invitationId,categoryId,createPlaceRequest)));
     }
 
     //@Operation("summary = "장소 확정하기")
     @PutMapping("/invitations/{invitationId}/place/{id}")
-    public ResponseEntity<Long> decidePlace(
+    public ResponseEntity<ApiResponse<Long>> decidePlace(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("id") Long placeId,
             @AuthenticationPrincipal JwtAuthentication token
     ){
-        return ResponseEntity.ok(placeService.decidePlace(token.getId(),placeId,invitationId));
+        return ResponseEntity.ok(ApiResponse.of(placeService.decidePlace(token.getId(),placeId,invitationId)));
     }
 
     //@Operation("summary = "장소 확정 취소하기")
     @DeleteMapping("/invitations/{invitationId}/place/{id}")
-    public ResponseEntity<Long> cancelDecidePlace(
+    public ResponseEntity<ApiResponse<Long>> cancelDecidePlace(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("id") Long placeId,
             @AuthenticationPrincipal JwtAuthentication token
     ){
-        return ResponseEntity.ok(placeService.cancelDecidePlace(token.getId(),placeId,invitationId));
+        return ResponseEntity.ok(ApiResponse.of(placeService.cancelDecidePlace(token.getId(),placeId,invitationId)));
     }
 
     //@Operation("summary = "확정된 장소 조회하기")
     @GetMapping("/invitations/{invitationId}/place")
-    public ResponseEntity<List<DecidedPlaceDetailResponse>> getDecidedPlace(
+    public ResponseEntity<ApiResponse<List<DecidedPlaceDetailResponse>>> getDecidedPlace(
             @PathVariable("invitationId") Long invitationId,
             @AuthenticationPrincipal JwtAuthentication token
     ){
-        return ResponseEntity.ok(placeService.getDecidedPlace(token.getId(),invitationId));
+        return ResponseEntity.ok(ApiResponse.of(placeService.getDecidedPlace(token.getId(),invitationId)));
     }
 
     //@Operation("summary = "확정된 장소 조회하기")
     @PutMapping("/invitations/{invitationId}")
-    public ResponseEntity<List<DecidedPlaceDetailResponse>> updateDecidedPlaceSeq(
+    public ResponseEntity<ApiResponse<List<DecidedPlaceDetailResponse>>> updateDecidedPlaceSeq(
             @PathVariable("invitationId") Long invitationId,
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody UpdateDecidePlaceRequest updateDecidePlaceRequest
     ){
-        return ResponseEntity.ok(placeService.updateDecidedPlaceSeq(token.getId(),invitationId,updateDecidePlaceRequest));
-    }
+        return ResponseEntity.ok(ApiResponse.of(placeService.updateDecidedPlaceSeq(token.getId(),invitationId,updateDecidePlaceRequest)));}
 }

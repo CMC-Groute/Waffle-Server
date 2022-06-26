@@ -7,8 +7,8 @@ import javax.validation.constraints.Size;
 
 import com.MakeUs.Waffle.domain.user.ProfileImage;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.exception.NotValidPasswordException;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class UserSignUpRequest {
 
     public boolean isDifferentPassword() {
         if (!this.password.equals(this.checkPassword)) {
-            throw new NotValidPasswordException(ErrorCode.CONFLICT_VALUE_ERROR);
+            throw new NotMatchResourceException(ErrorCode.NOT_MATCH_PASSWORD);
         }
         return false;
     }
