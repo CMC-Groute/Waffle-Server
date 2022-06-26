@@ -1,19 +1,13 @@
 package com.MakeUs.Waffle.domain.Email.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Random;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import com.MakeUs.Waffle.domain.Email.EmailCode;
 import com.MakeUs.Waffle.domain.Email.dto.TempPwRequest;
 import com.MakeUs.Waffle.domain.Email.repository.EmailCodeRepository;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.MakeUs.Waffle.error.ErrorCode.NOT_FOUND_RESOURCE_ERROR;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+import static com.MakeUs.Waffle.error.ErrorCode.NOT_FOUND_USER;
 
 @Slf4j
 @Service
@@ -60,12 +60,12 @@ public class EmailService {
 
     public void verifyCode(String email, String code) {
         //String savedCode = redisTemplate.opsForValue().get("EC:" + email);
-        EmailCode savedCode = emailCodeRepository.findByEmail(email).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_EMAIL_CODE));
+        EmailCode savedCode = emailCodeRepository.findByEmail(email).orElseThrow(() -> new NotFoundResourceException(ErrorCode.INVALID_EMAIL));
         if(savedCode.getExpiration().isBefore(LocalDateTime.now())){
-            throw new NotFoundUserException(ErrorCode.INVALID_EMAIL_ERROR);
+            throw new NotFoundResourceException(ErrorCode.INVALID_EMAIL);
         }
         if(!savedCode.getEmailCode().equals(code)){
-            throw new NotFoundUserException(ErrorCode.NOT_FOUND_EMAIL_CODE);
+            throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
         }
     }
 
@@ -121,7 +121,7 @@ public class EmailService {
     임시비밀번호 발급
      */
     public void sendPassword(TempPwRequest temporaryPwRequest) {
-        User user = userRepository.findByEmail(temporaryPwRequest.getEmail()).orElseThrow(() -> new NotFoundUserException(NOT_FOUND_RESOURCE_ERROR));
+        User user = userRepository.findByEmail(temporaryPwRequest.getEmail()).orElseThrow(() -> new NotFoundResourceException(NOT_FOUND_USER));
 
         final String code = getTempPassword();
         SimpleMailMessage message = new SimpleMailMessage();

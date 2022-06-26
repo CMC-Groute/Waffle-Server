@@ -1,7 +1,7 @@
 package com.MakeUs.Waffle.domain.user.dto;
 
-import com.MakeUs.Waffle.domain.user.exception.NotSamePasswordException;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -27,7 +27,7 @@ public class UserPasswordRequest {
 
     public boolean isDifferentPassword() {
         if (!this.newPassword.equals(this.newPasswordCheck)) {
-            throw new NotSamePasswordException(ErrorCode.CONFLICT_PASSWORD_ERROR);
+            throw new NotMatchResourceException(ErrorCode.NOT_SAME_PASSWORD);
         }
         return false;
     }

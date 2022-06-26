@@ -4,19 +4,15 @@ import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
-import com.MakeUs.Waffle.domain.user.exception.DuplicateUserException;
-import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
+import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -40,7 +36,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User signIn(String username, String credentials) {
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
         user.checkPassword(
                 passwordEncoder,
@@ -68,14 +64,14 @@ public class UserService {
 
     private boolean isDuplicateUser(UserSignUpRequest userSignUpRequest) {
         if (userRepository.existsByEmail(userSignUpRequest.getEmail())) {
-            throw new DuplicateUserException(ErrorCode.CONFLICT_VALUE_ERROR);
+            throw new DuplicatedResourceException(ErrorCode.DUPLICATE_USER_ERROR);
         }
         return false;
     }
 
     @Transactional
     public Long update(Long id, UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
         if (userUpdateRequest.getProfileImage() == null) {
             userUpdateRequest.setProfileImage(userUpdateRequest.getStringProfileImage(user.getProfileImage()));
         }
@@ -89,7 +85,7 @@ public class UserService {
 
     @Transactional
     public Long updatePassword(Long id, UserPasswordRequest userPasswordRequest){
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
         user.checkPassword(passwordEncoder,userPasswordRequest.getNowPassword());
         if(!userPasswordRequest.isDifferentPassword()){
             user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());

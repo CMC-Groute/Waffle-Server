@@ -2,8 +2,8 @@ package com.MakeUs.Waffle.domain.user;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
-import com.MakeUs.Waffle.domain.user.exception.NotSamePasswordException;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -68,7 +68,7 @@ public class User extends BaseEntity {
                 credentials,
                 password
         )) {
-            throw new NotSamePasswordException(ErrorCode.CONFLICT_PASSWORD_ERROR);
+            throw new NotMatchResourceException(ErrorCode.NOT_SAME_PASSWORD);
         }
     }
 

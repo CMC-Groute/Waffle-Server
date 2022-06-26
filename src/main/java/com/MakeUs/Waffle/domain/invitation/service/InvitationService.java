@@ -15,17 +15,13 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPla
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.service.PlaceService;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.exception.NotFoundUserException;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -52,7 +48,7 @@ public class InvitationService {
     @Transactional
     public Long createInvitation(Long userId, InvitationCreateRequest invitationCreateRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
         Invitation invitation = Invitation.builder()
                 .invitationCode(this.getInvitationCode())
@@ -89,10 +85,10 @@ public class InvitationService {
     @Transactional
     public Long inviteInvitation(Long userId, InvitationCodeRequest invitationCodeRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
         Invitation invitation = invitationRepository.findByInvitationCode(invitationCodeRequest.getInvitationCode())
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_MATCH_INVITATION_CODE));
 
         InvitationMember invitationMember = InvitationMember.builder()
                 .invitation(invitation)
@@ -105,7 +101,7 @@ public class InvitationService {
     @Transactional(readOnly = true)
     public List<InvitationListResponse> findInvitationsByUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
         List<Invitation> invitations = invitationRepository.getByUser(userId);
         return invitations.stream().map(Invitation::toInvitationListResponse).collect(toList());
@@ -114,10 +110,10 @@ public class InvitationService {
     @Transactional(readOnly = true)
     public InvitationDetailResponse getDetailInvitation(Long userId, Long invitationId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
-        Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
 
-        List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitation(invitation).orElseThrow(() -> new NotFoundUserException(ErrorCode.NOT_FOUND_RESOURCE_ERROR));
+        List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitation(invitation).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION_MEMBER));
         List<InvitationMemberDto> invitationMemberDtos = invitationMembers.stream().map(InvitationMember::toInvitationMemberDto).collect(toList());
 
         List<InvitationPlaceCategory> invitationPlaceCategories = invitationPlaceCategoryRepository.getByInvitationId(invitationId);
