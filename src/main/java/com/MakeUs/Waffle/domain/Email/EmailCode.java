@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "email_code")
@@ -28,15 +30,20 @@ public class EmailCode {
     @Column(name = "email_code", nullable = false)
     private String emailCode;
 
+    private LocalDateTime expiration;
+
     @Builder
-    private EmailCode(Long id, String email, String emailCode) {
+    public EmailCode(Long id, String email, String emailCode, LocalDateTime expiration) {
         this.id = id;
         this.email = email;
         this.emailCode = emailCode;
+        this.expiration = expiration;
     }
 
-    public void changeEmailCode(String emailCode) {
+
+    public void changeEmailCode(String emailCode,LocalDateTime expiration) {
         this.emailCode = emailCode;
+        this.expiration = expiration;
     }
 
 }
