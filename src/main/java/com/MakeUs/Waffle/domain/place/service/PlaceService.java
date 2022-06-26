@@ -8,6 +8,7 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPla
 import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.*;
 import com.MakeUs.Waffle.domain.place.repository.PlaceRepository;
+import com.MakeUs.Waffle.domain.placeLikes.repository.PlaceLikesRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
@@ -28,14 +29,15 @@ public class PlaceService {
     private final InvitationPlaceCategoryRepository invitationPlaceCategoryRepository;
     private final InvitationMemberRepository invitationMemberRepository;
     private final InvitationRepository invitationRepository;
+    private final PlaceLikesRepository placeLikesRepository;
 
-    @Builder
-    public PlaceService(PlaceRepository placeRepository, UserRepository userRepository, InvitationPlaceCategoryRepository invitationPlaceCategoryRepository, InvitationMemberRepository invitationMemberRepository, InvitationRepository invitationRepository) {
+    public PlaceService(PlaceRepository placeRepository, UserRepository userRepository, InvitationPlaceCategoryRepository invitationPlaceCategoryRepository, InvitationMemberRepository invitationMemberRepository, InvitationRepository invitationRepository, PlaceLikesRepository placeLikesRepository) {
         this.placeRepository = placeRepository;
         this.userRepository = userRepository;
         this.invitationPlaceCategoryRepository = invitationPlaceCategoryRepository;
         this.invitationMemberRepository = invitationMemberRepository;
         this.invitationRepository = invitationRepository;
+        this.placeLikesRepository = placeLikesRepository;
     }
 
 
@@ -108,6 +110,15 @@ public class PlaceService {
         InvitationPlaceCategory invitationPlaceCategory = invitationPlaceCategoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE_CATEGORY));
 
         List<Place> places = placeRepository.getByInvitationAndPlaceCategoryId(invitation, categoryId);
-        return places.stream().map(Place::toPlaceByCategoryResponse).collect(Collectors.toList());
+        List<PlaceByCategoryResponse> placeByCategoryResponses = new ArrayList<>();
+        for(Place place : places){
+            if(placeLikesRepository.existsByUserIdAndPlace(userId,place)){
+                placeByCategoryResponses.add(place.toPlaceByCategoryResponse(true));
+            } else{
+                placeByCategoryResponses.add(place.toPlaceByCategoryResponse(false));
+
+            }
+        }
+        return placeByCategoryResponses;
     }
 }
