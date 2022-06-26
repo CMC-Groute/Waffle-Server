@@ -3,7 +3,9 @@ package com.MakeUs.Waffle.domain.place;
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
+import com.MakeUs.Waffle.domain.placeLikes.dto.PlaceLikesDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -89,6 +91,18 @@ public class Place extends BaseEntity {
         return DecidedPlaceDetailResponse.builder()
                 .seq(seq)
                 .title(title)
+                .build();
+    }
+
+    public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
+        return PlaceByCategoryResponse.builder()
+                .title(title)
+                .roadNameAddress(roadNameAddress)
+                .isDecision(isDecision)
+                .placeLikesDto(PlaceLikesDto.builder()
+                        .likeCnt((long) placeLikes.size())
+                        .isPlaceLike(isPlaceLike)
+                        .build())
                 .build();
     }
 }

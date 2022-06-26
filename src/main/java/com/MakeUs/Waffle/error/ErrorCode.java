@@ -20,6 +20,7 @@ public enum ErrorCode {
     NOT_MATCH_INVITATION_CODE("C004","유효하지 않은 초대장 코드 입니다."),
 
     DUPLICATE_PLACE_CATEGORY("D001","중복된 카테고리 입니다."),
+    NOT_FOUND_PLACE_CATEGORY("D002", "존재하지 않는 카테고리입니다."),
 
     NOT_FOUND_INVITATION_MEMBER("F001","약속 멤버가 없습니다."),
 
