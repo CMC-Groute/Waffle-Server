@@ -5,10 +5,7 @@ import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
@@ -19,6 +16,7 @@ import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,6 +102,18 @@ public class InvitationService {
                 .build();
 
         return invitationMemberRepository.save(invitationMember).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public InvitationCodeResponse getInvitationCode(Long userId, Long invitationId){
+        Invitation invitation = invitationRepository.findById(invitationId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        InvitationMember invitationMember = invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+                .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+
+        return InvitationCodeResponse.builder()
+                .code(invitation.getInvitationCode())
+                .build();
     }
 
     @Transactional(readOnly = true)

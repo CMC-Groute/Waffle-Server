@@ -1,9 +1,6 @@
 package com.MakeUs.Waffle.domain.invitation.controller;
 
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.response.ApiResponse;
@@ -38,6 +35,14 @@ public class InvitationController {
             @Valid @RequestBody InvitationCodeRequest invitationCodeRequest
     ) {
         return ResponseEntity.ok(ApiResponse.of(invitationService.inviteInvitation(token.getId(),invitationCodeRequest)));
+    }
+
+    @GetMapping("/invitations/{id}/code")
+    public ResponseEntity<ApiResponse<InvitationCodeResponse>> inviteInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable("id") Long invitationId
+    ) {
+        return ResponseEntity.ok(ApiResponse.of(invitationService.getInvitationCode(token.getId(),invitationId)));
     }
 
     //사용자 예정된 약속들 확인
