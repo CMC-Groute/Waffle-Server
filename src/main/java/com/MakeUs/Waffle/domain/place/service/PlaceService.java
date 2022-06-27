@@ -121,4 +121,11 @@ public class PlaceService {
         }
         return placeByCategoryResponses;
     }
+
+    @Transactional
+    public PlaceDetailResponse getDetailPlace(Long userId,Long invitationId, Long placeId){
+        invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
+        return place.toPlaceDetailResponse();
+    }
 }
