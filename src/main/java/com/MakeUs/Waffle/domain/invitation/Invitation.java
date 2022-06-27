@@ -86,6 +86,7 @@ public class Invitation extends BaseEntity {
 
     public InvitationListResponse toInvitationListResponse() {
         return InvitationListResponse.builder()
+                .invitationImageCategory(invitationImageCategory.toString())
                 .invitationPlace(invitationPlace)
                 .comment(comment)
                 .date(date)
@@ -100,6 +101,7 @@ public class Invitation extends BaseEntity {
                 .title(title)
                 .invitationMemberDto(invitationMemberDto)
                 .date(date)
+                .invitationImageCategory(invitationImageCategory.toString())
                 .decidedPlaceDetailResponses(decidedPlaceDetailResponses)
                 .placeCategoryDto(placeCategoryDtos)
                 .comment(comment)
