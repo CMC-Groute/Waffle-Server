@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum InvitationImageCategory {
-    CHERRY("CHERRY"),
-    BANANA("BANANA"),
-    MINT("MINT");
+    CHOCO("CHOCO"),
+    BLUEBERRY("BLUEBERRY"),
+    VANILA("VANILA"),
+    STRAWBERRY("STRAWBERRY"),
+    MALCHA("MALCHA");
 
     private String invitationImageCategory;
 

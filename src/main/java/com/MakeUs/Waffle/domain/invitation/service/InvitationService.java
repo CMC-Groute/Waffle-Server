@@ -4,6 +4,7 @@ import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
@@ -49,13 +50,14 @@ public class InvitationService {
     public Long createInvitation(Long userId, InvitationCreateRequest invitationCreateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
-
+        InvitationImageCategory invitationImageCategory = InvitationImageCategory.valueOf(getInvitationImageCategory());
         Invitation invitation = Invitation.builder()
                 .invitationCode(this.getInvitationCode())
                 .comment(invitationCreateRequest.getComment())
                 .date(invitationCreateRequest.getDate())
                 .invitationPlace(invitationCreateRequest.getInvitationPlace())
                 .title(invitationCreateRequest.getTitle())
+                .invitationImageCategory(invitationImageCategory)
                 .organizerId(userId)
                 .build();
 
@@ -80,6 +82,12 @@ public class InvitationService {
             str += charSet[idx];
         }
         return str;
+    }
+
+    public String getInvitationImageCategory(){
+        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILA","STRAWBERRY", "MALCHA"};
+        int idx = (int) (5 * Math.random());
+        return stringSet[idx];
     }
 
     @Transactional

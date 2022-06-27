@@ -18,12 +18,14 @@ public class InvitationListResponse {
 
     private String invitationPlace;
 
+    private String InvitationImageCategory;
+
     @Builder
-    public InvitationListResponse(String title, LocalDateTime date, String comment, String invitationPlace) {
+    public InvitationListResponse(String title, LocalDateTime date, String comment, String invitationPlace, String invitationImageCategory) {
         this.title = title;
         this.date = date;
         this.comment = comment;
         this.invitationPlace = invitationPlace;
+        InvitationImageCategory = invitationImageCategory;
     }
-
 }
