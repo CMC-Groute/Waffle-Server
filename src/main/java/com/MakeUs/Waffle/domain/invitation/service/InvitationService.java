@@ -142,4 +142,15 @@ public class InvitationService {
         return invitation.toInvitationDetailResponse(invitationMemberDtos,decidedPlace,placeCategoryDtos);
 
     }
+
+    @Transactional
+    public Long updateInvitation(Long userId, Long invitationId, InvitationUpdateRequest invitationUpdateRequest){
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+                .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+
+        Invitation invitation = invitationRepository.findById(invitationId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        invitation.updateInvitation(invitationUpdateRequest);
+        return invitationId;
+    }
 }
