@@ -5,6 +5,7 @@ import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationUpdateRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.place.Place;
@@ -96,6 +97,13 @@ public class Invitation extends BaseEntity {
     public Invitation addInvitationCategories(List<InvitationPlaceCategory> invitationPlaceCategories) {
         invitationPlaceCategories.forEach(this::addInvitationCategory);
         return this;
+    }
+
+    public void updateInvitation(InvitationUpdateRequest invitationUpdateRequest){
+        this.title = invitationUpdateRequest.getTitle();
+        this.invitationPlace = invitationUpdateRequest.getInvitationPlace();
+        this.comment = invitationUpdateRequest.getComment();
+        this.date = invitationUpdateRequest.getDate();
     }
 
     public InvitationListResponse toInvitationListResponse() {

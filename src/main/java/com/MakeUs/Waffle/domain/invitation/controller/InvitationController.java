@@ -61,4 +61,14 @@ public class InvitationController {
             ) {
         return ResponseEntity.ok(ApiResponse.of(invitationService.getDetailInvitation(token.getId(),invitationId)));
     }
+
+    //약속 수정
+    @PatchMapping("/invitations/{invitationId}")
+    public ResponseEntity<ApiResponse<Long>> updateInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable("invitationId") Long invitationId,
+            @Valid @RequestBody InvitationUpdateRequest invitationUpdateRequest
+    ) {
+        return ResponseEntity.ok(ApiResponse.of(invitationService.updateInvitation(token.getId(),invitationId,invitationUpdateRequest)));
+    }
 }
