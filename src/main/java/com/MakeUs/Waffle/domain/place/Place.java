@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "place")
@@ -72,6 +73,14 @@ public class Place extends BaseEntity {
     public Place addPlaceLikes(List<PlaceLike> placeLikes) {
         placeLikes.forEach(this::addPlaceLike);
         return this;
+    }
+
+    public void setInvitation(Invitation invitation) {
+        if (Objects.nonNull(this.invitation)) {
+            this.invitation.getPlaces()
+                    .remove(this);
+        }
+        this.invitation = invitation;
     }
 
     public void decidePlace(Long seq){

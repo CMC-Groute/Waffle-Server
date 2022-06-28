@@ -13,4 +13,6 @@ public interface InvitationMemberRepository extends JpaRepository<InvitationMemb
     Optional<InvitationMember> findByUserIdAndInvitationId(Long userId, Long invitationId);
 
     Optional<List<InvitationMember>> findByInvitation(Invitation invitation);
+
+    List<InvitationMember> getByInvitationId(Long invitationId);
 }
