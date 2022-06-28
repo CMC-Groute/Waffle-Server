@@ -99,6 +99,7 @@ public class Place extends BaseEntity {
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
         return DecidedPlaceDetailResponse.builder()
+                .placeId(id)
                 .seq(seq)
                 .title(title)
                 .build();
