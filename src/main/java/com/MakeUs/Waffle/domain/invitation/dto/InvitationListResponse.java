@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InvitationListResponse {
+    private Long invitationId;
     private String title;
 
     private LocalDateTime date;
@@ -21,7 +22,8 @@ public class InvitationListResponse {
     private String InvitationImageCategory;
 
     @Builder
-    public InvitationListResponse(String title, LocalDateTime date, String comment, String invitationPlace, String invitationImageCategory) {
+    public InvitationListResponse(Long invitationId, String title, LocalDateTime date, String comment, String invitationPlace, String invitationImageCategory) {
+        this.invitationId = invitationId;
         this.title = title;
         this.date = date;
         this.comment = comment;

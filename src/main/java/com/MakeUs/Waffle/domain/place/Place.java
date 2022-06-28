@@ -99,6 +99,7 @@ public class Place extends BaseEntity {
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
         return DecidedPlaceDetailResponse.builder()
+                .placeId(id)
                 .seq(seq)
                 .title(title)
                 .build();
@@ -106,6 +107,7 @@ public class Place extends BaseEntity {
 
     public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
         return PlaceByCategoryResponse.builder()
+                .placeId(id)
                 .title(title)
                 .roadNameAddress(roadNameAddress)
                 .isDecision(isDecision)

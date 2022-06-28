@@ -100,6 +100,7 @@ public class Invitation extends BaseEntity {
 
     public InvitationListResponse toInvitationListResponse() {
         return InvitationListResponse.builder()
+                .invitationId(id)
                 .invitationImageCategory(invitationImageCategory.toString())
                 .invitationPlace(invitationPlace)
                 .comment(comment)
