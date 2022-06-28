@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class PlaceByCategoryResponse {
+    private Long placeId;
     private String title;
     private String roadNameAddress;
     private Boolean isDecision;
@@ -16,7 +17,8 @@ public class PlaceByCategoryResponse {
     }
 
     @Builder
-    public PlaceByCategoryResponse(String title, String roadNameAddress, Boolean isDecision, PlaceLikesDto placeLikesDto) {
+    public PlaceByCategoryResponse(Long placeId, String title, String roadNameAddress, Boolean isDecision, PlaceLikesDto placeLikesDto) {
+        this.placeId = placeId;
         this.title = title;
         this.roadNameAddress = roadNameAddress;
         this.isDecision = isDecision;

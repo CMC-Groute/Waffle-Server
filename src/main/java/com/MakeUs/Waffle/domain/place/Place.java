@@ -106,6 +106,7 @@ public class Place extends BaseEntity {
 
     public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
         return PlaceByCategoryResponse.builder()
+                .placeId(id)
                 .title(title)
                 .roadNameAddress(roadNameAddress)
                 .isDecision(isDecision)
