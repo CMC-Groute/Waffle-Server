@@ -124,7 +124,7 @@ public class PlaceService {
 
     @Transactional
     public PlaceDetailResponse getDetailPlace(Long userId,Long invitationId, Long placeId){
-        invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
         return place.toPlaceDetailResponse();
     }
