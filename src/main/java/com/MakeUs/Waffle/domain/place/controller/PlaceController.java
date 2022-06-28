@@ -2,9 +2,7 @@ package com.MakeUs.Waffle.domain.place.controller;
 
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
-import com.MakeUs.Waffle.domain.place.dto.CreatePlaceRequest;
-import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
-import com.MakeUs.Waffle.domain.place.dto.UpdateDecidePlaceRequest;
+import com.MakeUs.Waffle.domain.place.dto.*;
 import com.MakeUs.Waffle.domain.place.service.PlaceService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.response.ApiResponse;
@@ -63,12 +61,33 @@ public class PlaceController {
         return ResponseEntity.ok(ApiResponse.of(placeService.getDecidedPlace(token.getId(),invitationId)));
     }
 
-    //@Operation("summary = "확정된 장소 조회하기")
+    //@Operation("summary = "확정된 장소 순서 변경하기")
     @PutMapping("/invitations/{invitationId}")
     public ResponseEntity<ApiResponse<List<DecidedPlaceDetailResponse>>> updateDecidedPlaceSeq(
             @PathVariable("invitationId") Long invitationId,
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody UpdateDecidePlaceRequest updateDecidePlaceRequest
     ){
-        return ResponseEntity.ok(ApiResponse.of(placeService.updateDecidedPlaceSeq(token.getId(),invitationId,updateDecidePlaceRequest)));}
+        return ResponseEntity.ok(ApiResponse.of(placeService.updateDecidedPlaceSeq(token.getId(),invitationId,updateDecidePlaceRequest)));
+    }
+
+    //@Operation("summary = "장소카테고리로 장소 조회하기")
+    @GetMapping("/invitations/{invitationId}/placeCategory/{categoryId}/place")
+    public ResponseEntity<ApiResponse<List<PlaceByCategoryResponse>>> findPlaceByCategory(
+            @PathVariable("invitationId") Long invitationId,
+            @PathVariable("categoryId") Long categoryId,
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        return ResponseEntity.ok(ApiResponse.of(placeService.findPlaceByCategory(token.getId(),invitationId,categoryId)));
+    }
+
+    //@Operation("summary = "장소 상세 조회하기")
+    @GetMapping("/invitations/{invitationId}/place/{placeId}")
+    public ResponseEntity<ApiResponse<PlaceDetailResponse>> getDetailPlace(
+            @PathVariable("invitationId") Long invitationId,
+            @PathVariable("placeId") Long placeId,
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        return ResponseEntity.ok(ApiResponse.of(placeService.getDetailPlace(token.getId(),invitationId,placeId)));
+    }
 }

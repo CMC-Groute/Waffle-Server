@@ -5,9 +5,12 @@ import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.dto.InvitationUpdateRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
+import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
+import com.MakeUs.Waffle.domain.user.Role;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,14 +42,20 @@ public class Invitation extends BaseEntity {
 
     private Long organizerId;
 
+    @Enumerated(EnumType.STRING)
+    private InvitationImageCategory invitationImageCategory;
+
     @OneToMany(mappedBy = "invitation", orphanRemoval = true)
     private List<InvitationMember> invitationMembers;
 
     @OneToMany(mappedBy = "invitation", orphanRemoval = true)
     private List<InvitationPlaceCategory> invitationPlaceCategories;
 
+    @OneToMany(mappedBy = "invitation", orphanRemoval = true)
+    private List<Place> places;
+
     @Builder
-    public Invitation(Long id, String title, LocalDateTime date, String comment, String invitationCode, String invitationPlace, Long organizerId) {
+    public Invitation(Long id, String title, LocalDateTime date, String comment, String invitationCode, String invitationPlace, Long organizerId, InvitationImageCategory invitationImageCategory, List<InvitationMember> invitationMembers, List<InvitationPlaceCategory> invitationPlaceCategories) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -54,7 +63,11 @@ public class Invitation extends BaseEntity {
         this.invitationCode = invitationCode;
         this.invitationPlace = invitationPlace;
         this.organizerId = organizerId;
+        this.invitationImageCategory = invitationImageCategory;
+        this.invitationMembers = invitationMembers;
+        this.invitationPlaceCategories = invitationPlaceCategories;
     }
+
 
     public void addInvitationMember(InvitationMember invitationMember) {
         this.invitationMembers.add(invitationMember);
@@ -63,6 +76,16 @@ public class Invitation extends BaseEntity {
 
     public Invitation addInvitationMembers(List<InvitationMember> invitationMembers) {
         invitationMembers.forEach(this::addInvitationMember);
+        return this;
+    }
+
+    public void addPlace(Place place) {
+        this.places.add(place);
+        place.setInvitation(this);
+    }
+
+    public Invitation addPlaces(List<Place> places) {
+        places.forEach(this::addPlace);
         return this;
     }
 
@@ -76,8 +99,17 @@ public class Invitation extends BaseEntity {
         return this;
     }
 
+    public void updateInvitation(InvitationUpdateRequest invitationUpdateRequest){
+        this.title = invitationUpdateRequest.getTitle();
+        this.invitationPlace = invitationUpdateRequest.getInvitationPlace();
+        this.comment = invitationUpdateRequest.getComment();
+        this.date = invitationUpdateRequest.getDate();
+    }
+
     public InvitationListResponse toInvitationListResponse() {
         return InvitationListResponse.builder()
+                .invitationId(id)
+                .invitationImageCategory(invitationImageCategory.toString())
                 .invitationPlace(invitationPlace)
                 .comment(comment)
                 .date(date)
@@ -92,6 +124,7 @@ public class Invitation extends BaseEntity {
                 .title(title)
                 .invitationMemberDto(invitationMemberDto)
                 .date(date)
+                .invitationImageCategory(invitationImageCategory.toString())
                 .decidedPlaceDetailResponses(decidedPlaceDetailResponses)
                 .placeCategoryDto(placeCategoryDtos)
                 .comment(comment)

@@ -19,6 +19,7 @@ public class InvitationDetailResponse {
     private String comment;
     private String invitationPlace;
     private Long waffleId;
+    private String invitationImageCategory;
     List<InvitationMemberDto> invitationMemberDto;
     List<PlaceCategoryDto> placeCategoryDto;
     List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses;
@@ -27,7 +28,7 @@ public class InvitationDetailResponse {
     public InvitationDetailResponse(String title, LocalDateTime date, String comment, String invitationPlace,
                                     Long waffleId, List<InvitationMemberDto> invitationMemberDto,
                                     List<PlaceCategoryDto> placeCategoryDto,
-                                    List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses) {
+                                    List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses,String invitationImageCategory) {
         this.title = title;
         this.date = date;
         this.comment = comment;
@@ -36,5 +37,6 @@ public class InvitationDetailResponse {
         this.invitationMemberDto = invitationMemberDto;
         this.placeCategoryDto = placeCategoryDto;
         this.decidedPlaceDetailResponses = decidedPlaceDetailResponses;
+        this.invitationImageCategory = invitationImageCategory;
     }
 }

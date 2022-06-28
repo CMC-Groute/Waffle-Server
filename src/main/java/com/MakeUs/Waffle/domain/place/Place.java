@@ -3,7 +3,10 @@ package com.MakeUs.Waffle.domain.place;
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
+import com.MakeUs.Waffle.domain.place.dto.PlaceDetailResponse;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
+import com.MakeUs.Waffle.domain.placeLikes.dto.PlaceLikesDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "place")
@@ -71,6 +75,14 @@ public class Place extends BaseEntity {
         return this;
     }
 
+    public void setInvitation(Invitation invitation) {
+        if (Objects.nonNull(this.invitation)) {
+            this.invitation.getPlaces()
+                    .remove(this);
+        }
+        this.invitation = invitation;
+    }
+
     public void decidePlace(Long seq){
         this.isDecision = true;
         this.seq = seq;
@@ -87,8 +99,29 @@ public class Place extends BaseEntity {
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
         return DecidedPlaceDetailResponse.builder()
+                .placeId(id)
                 .seq(seq)
                 .title(title)
+                .build();
+    }
+
+    public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
+        return PlaceByCategoryResponse.builder()
+                .placeId(id)
+                .title(title)
+                .roadNameAddress(roadNameAddress)
+                .isDecision(isDecision)
+                .placeLikesDto(PlaceLikesDto.builder()
+                        .likeCnt((long) placeLikes.size())
+                        .isPlaceLike(isPlaceLike)
+                        .build())
+                .build();
+    }
+
+    public PlaceDetailResponse toPlaceDetailResponse(){
+        return PlaceDetailResponse.builder()
+                .comment(comment)
+                .link(link)
                 .build();
     }
 }

@@ -1,9 +1,6 @@
 package com.MakeUs.Waffle.domain.invitation.controller;
 
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.response.ApiResponse;
@@ -40,6 +37,14 @@ public class InvitationController {
         return ResponseEntity.ok(ApiResponse.of(invitationService.inviteInvitation(token.getId(),invitationCodeRequest)));
     }
 
+    @GetMapping("/invitations/{id}/code")
+    public ResponseEntity<ApiResponse<InvitationCodeResponse>> inviteInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable("id") Long invitationId
+    ) {
+        return ResponseEntity.ok(ApiResponse.of(invitationService.getInvitationCode(token.getId(),invitationId)));
+    }
+
     //사용자 예정된 약속들 확인
     @GetMapping("/invitations")
     public ResponseEntity<ApiResponse<List<InvitationListResponse>>> findInvitationByUser(
@@ -55,5 +60,15 @@ public class InvitationController {
             @PathVariable("invitationId") Long invitationId
             ) {
         return ResponseEntity.ok(ApiResponse.of(invitationService.getDetailInvitation(token.getId(),invitationId)));
+    }
+
+    //약속 수정
+    @PatchMapping("/invitations/{invitationId}")
+    public ResponseEntity<ApiResponse<Long>> updateInvitation(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable("invitationId") Long invitationId,
+            @Valid @RequestBody InvitationUpdateRequest invitationUpdateRequest
+    ) {
+        return ResponseEntity.ok(ApiResponse.of(invitationService.updateInvitation(token.getId(),invitationId,invitationUpdateRequest)));
     }
 }

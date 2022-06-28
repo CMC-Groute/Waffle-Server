@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryR
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "invitation_place_category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class InvitationPlaceCategory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

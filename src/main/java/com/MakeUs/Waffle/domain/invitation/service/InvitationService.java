@@ -4,10 +4,8 @@ import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCodeRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationCreateRequest;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
-import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
+import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
@@ -18,6 +16,7 @@ import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,13 +48,14 @@ public class InvitationService {
     public Long createInvitation(Long userId, InvitationCreateRequest invitationCreateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
-
+        InvitationImageCategory invitationImageCategory = InvitationImageCategory.valueOf(getInvitationImageCategory());
         Invitation invitation = Invitation.builder()
                 .invitationCode(this.getInvitationCode())
                 .comment(invitationCreateRequest.getComment())
                 .date(invitationCreateRequest.getDate())
                 .invitationPlace(invitationCreateRequest.getInvitationPlace())
                 .title(invitationCreateRequest.getTitle())
+                .invitationImageCategory(invitationImageCategory)
                 .organizerId(userId)
                 .build();
 
@@ -82,6 +82,12 @@ public class InvitationService {
         return str;
     }
 
+    public String getInvitationImageCategory(){
+        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILA","STRAWBERRY", "MALCHA"};
+        int idx = (int) (5 * Math.random());
+        return stringSet[idx];
+    }
+
     @Transactional
     public Long inviteInvitation(Long userId, InvitationCodeRequest invitationCodeRequest) {
         User user = userRepository.findById(userId)
@@ -96,6 +102,18 @@ public class InvitationService {
                 .build();
 
         return invitationMemberRepository.save(invitationMember).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public InvitationCodeResponse getInvitationCode(Long userId, Long invitationId){
+        Invitation invitation = invitationRepository.findById(invitationId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        InvitationMember invitationMember = invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+                .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+
+        return InvitationCodeResponse.builder()
+                .code(invitation.getInvitationCode())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -123,5 +141,16 @@ public class InvitationService {
 
         return invitation.toInvitationDetailResponse(invitationMemberDtos,decidedPlace,placeCategoryDtos);
 
+    }
+
+    @Transactional
+    public Long updateInvitation(Long userId, Long invitationId, InvitationUpdateRequest invitationUpdateRequest){
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+                .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+
+        Invitation invitation = invitationRepository.findById(invitationId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        invitation.updateInvitation(invitationUpdateRequest);
+        return invitationId;
     }
 }
