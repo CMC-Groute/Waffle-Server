@@ -20,6 +20,8 @@ import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -120,9 +122,15 @@ public class InvitationService {
     public List<InvitationListResponse> findInvitationsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
-
         List<Invitation> invitations = invitationRepository.getByUser(userId);
-        return invitations.stream().map(Invitation::toInvitationListResponse).collect(toList());
+
+        List<InvitationListResponse> invitationListResponses = new ArrayList<>();
+        for(Invitation invitation : invitations){
+            List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitation(invitation).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION_MEMBER));
+            List<InvitationMemberDto> invitationMemberDtos = invitationMembers.stream().map(InvitationMember::toInvitationMemberDto).collect(toList());
+            invitationListResponses.add(invitation.toInvitationListResponse(invitationMemberDtos));
+        }
+        return invitationListResponses;
     }
 
     @Transactional(readOnly = true)
