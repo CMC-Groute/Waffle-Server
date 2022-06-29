@@ -48,6 +48,7 @@ public class InvitationMember extends BaseEntity {
         return InvitationMemberDto.builder()
                 .nickname(user.getNickname())
                 .userId(user.getId())
+                .profileImage(user.getProfileImage().toString())
                 .build();
     }
 }

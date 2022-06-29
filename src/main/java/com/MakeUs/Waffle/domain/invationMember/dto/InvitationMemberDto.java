@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 public class InvitationMemberDto {
     private Long userId;
     private String nickname;
+    private String profileImage;
 
     @Builder
-    public InvitationMemberDto(Long userId, String nickname) {
+    public InvitationMemberDto(Long userId, String nickname, String profileImage) {
         this.userId = userId;
         this.nickname = nickname;
+        this.profileImage = profileImage;
     }
 }
