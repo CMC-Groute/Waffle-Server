@@ -92,4 +92,10 @@ public class UserService {
         }
         return user.getId();
     }
+
+    @Transactional
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        userRepository.delete(user);
+    }
 }

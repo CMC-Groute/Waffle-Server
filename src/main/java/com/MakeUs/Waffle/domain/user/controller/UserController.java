@@ -6,15 +6,14 @@ import com.MakeUs.Waffle.domain.user.service.UserService;
 import com.MakeUs.Waffle.jwt.JwtAuthentication;
 import com.MakeUs.Waffle.jwt.JwtAuthenticationToken;
 import com.MakeUs.Waffle.response.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @Validated
@@ -87,5 +86,13 @@ public class UserController {
                 token.getId(),
                 userPasswordRequest
         )));
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<Void> updatePassword(
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        userService.deleteUser(token.getId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
