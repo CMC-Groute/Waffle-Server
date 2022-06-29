@@ -109,7 +109,7 @@ public class PlaceService {
         Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
         InvitationPlaceCategory invitationPlaceCategory = invitationPlaceCategoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE_CATEGORY));
 
-        List<Place> places = placeRepository.getByInvitationAndPlaceCategoryId(invitation, categoryId);
+        List<Place> places = placeRepository.getByInvitationAndPlaceCategoryIdOrderByCreatedAt(invitation, categoryId);
         List<PlaceByCategoryResponse> placeByCategoryResponses = new ArrayList<>();
         for(Place place : places){
             if(placeLikesRepository.existsByUserIdAndPlace(userId,place)){
