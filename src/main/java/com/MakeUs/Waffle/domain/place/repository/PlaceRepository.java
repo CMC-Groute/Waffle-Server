@@ -16,7 +16,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     List<Place> getByInvitationAndIsDecisionTrueOrderBySeq(Invitation invitation);
 
-    List<Place> getByInvitationAndPlaceCategoryId(Invitation invitation, Long categoryId);
+    List<Place> getByInvitationAndPlaceCategoryIdOrderByCreatedAt(Invitation invitation, Long categoryId);
 
     List<Place> deleteByPlaceCategoryId(Long id);
 }
