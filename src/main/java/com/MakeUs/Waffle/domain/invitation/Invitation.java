@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "invitation")
@@ -108,7 +109,9 @@ public class Invitation extends BaseEntity {
 
     public InvitationListResponse toInvitationListResponse() {
         return InvitationListResponse.builder()
+                .invitationMemberDto(invitationMembers.stream().map(InvitationMember::toInvitationMemberDto).collect(Collectors.toList()))
                 .invitationId(id)
+                .waffleId(organizerId)
                 .invitationImageCategory(invitationImageCategory.toString())
                 .invitationPlace(invitationPlace)
                 .comment(comment)
