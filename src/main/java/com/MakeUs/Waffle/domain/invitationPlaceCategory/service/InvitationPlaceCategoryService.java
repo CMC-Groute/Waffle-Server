@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.invitationPlaceCategory.service;
 
+import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
@@ -7,11 +8,14 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.CreatePlaceCategoryResponse;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
+import com.MakeUs.Waffle.domain.place.repository.PlaceRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
+import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
+import lombok.Builder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +26,23 @@ import java.util.List;
 public class InvitationPlaceCategoryService {
 
     private final InvitationPlaceCategoryRepository invitationPlaceCategoryRepository;
+    private final InvitationMemberRepository invitationMemberRepository;
     private final UserRepository userRepository;
     private final InvitationRepository invitationRepository;
+    private final PlaceRepository placeRepository;
 
-    public InvitationPlaceCategoryService(InvitationPlaceCategoryRepository invitationPlaceCategoryRepository, UserRepository userRepository, InvitationRepository invitationRepository) {
+    @Builder
+    public InvitationPlaceCategoryService(InvitationPlaceCategoryRepository invitationPlaceCategoryRepository,
+                                          InvitationMemberRepository invitationMemberRepository,
+                                          UserRepository userRepository,
+                                          InvitationRepository invitationRepository,
+                                          PlaceRepository placeRepository) {
         this.invitationPlaceCategoryRepository = invitationPlaceCategoryRepository;
+        this.invitationMemberRepository = invitationMemberRepository;
         this.userRepository = userRepository;
         this.invitationRepository = invitationRepository;
+        this.placeRepository = placeRepository;
     }
-
 
     @Transactional
     public List<CreatePlaceCategoryResponse> addInvitationPlaceCategory(Long userId, Long invitationId, CreatePlaceCategoryRequest createPlaceCategoryRequest) {
@@ -49,5 +61,14 @@ public class InvitationPlaceCategoryService {
         }
 
         return createPlaceCategoryResponses;
+    }
+
+    @Transactional
+    public void deleteInvitationPlaceCategory(Long userId, Long invitationId, Long  placeCategoryId) {
+        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+                .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+
+        invitationPlaceCategoryRepository.deleteById(placeCategoryId);
+        placeRepository.deleteByPlaceCategoryId(placeCategoryId);
     }
 }
