@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.user.service;
 
+import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
@@ -24,13 +25,15 @@ public class UserService {
     private static final String DIRECTORY = "static";
 
     private final UserRepository userRepository;
+    private final InvitationMemberRepository invitationMemberRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(
-            UserRepository userRepository, PasswordEncoder passwordEncoder
+            UserRepository userRepository, PasswordEncoder passwordEncoder, InvitationMemberRepository invitationMemberRepository
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.invitationMemberRepository = invitationMemberRepository;
     }
 
     @Transactional(readOnly = true)
@@ -91,5 +94,12 @@ public class UserService {
             user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());
         }
         return user.getId();
+    }
+
+    @Transactional
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        userRepository.delete(user);
+        invitationMemberRepository.deleteByUser(user);
     }
 }
