@@ -21,6 +21,8 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
@@ -56,6 +58,7 @@ public class InvitationService {
                 .comment(invitationCreateRequest.getComment())
                 .date(invitationCreateRequest.getDate())
                 .invitationPlace(invitationCreateRequest.getInvitationPlace())
+                .time(invitationCreateRequest.getTime())
                 .title(invitationCreateRequest.getTitle())
                 .invitationImageCategory(invitationImageCategory)
                 .organizerId(userId)

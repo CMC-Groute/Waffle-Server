@@ -3,8 +3,10 @@ package com.MakeUs.Waffle.domain.invitation;
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
+
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationDetailResponse;
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationListResponse;
+
 import com.MakeUs.Waffle.domain.invitation.dto.InvitationUpdateRequest;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
@@ -17,7 +19,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +39,9 @@ public class Invitation extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String title;
 
-    private LocalDateTime date;
+    private LocalDate date;
+
+    private LocalTime time;
 
     private String comment;
 
@@ -51,6 +57,9 @@ public class Invitation extends BaseEntity {
     @OneToMany(mappedBy = "invitation", orphanRemoval = true)
     private List<InvitationMember> invitationMembers;
 
+    @Column(name = "is_expired", nullable = false, columnDefinition = "TINYINT default 1")
+    private boolean isExpired;
+
     @OneToMany(mappedBy = "invitation", orphanRemoval = true)
     private List<InvitationPlaceCategory> invitationPlaceCategories;
 
@@ -58,17 +67,20 @@ public class Invitation extends BaseEntity {
     private List<Place> places;
 
     @Builder
-    public Invitation(Long id, String title, LocalDateTime date, String comment, String invitationCode, String invitationPlace, Long organizerId, InvitationImageCategory invitationImageCategory, List<InvitationMember> invitationMembers, List<InvitationPlaceCategory> invitationPlaceCategories) {
+    public Invitation(Long id, String title, LocalDate date, LocalTime time, String comment, String invitationCode, String invitationPlace, Long organizerId, InvitationImageCategory invitationImageCategory, List<InvitationMember> invitationMembers, boolean isExpired, List<InvitationPlaceCategory> invitationPlaceCategories, List<Place> places) {
         this.id = id;
         this.title = title;
         this.date = date;
+        this.time = time;
         this.comment = comment;
         this.invitationCode = invitationCode;
         this.invitationPlace = invitationPlace;
         this.organizerId = organizerId;
         this.invitationImageCategory = invitationImageCategory;
         this.invitationMembers = invitationMembers;
+        this.isExpired = isExpired;
         this.invitationPlaceCategories = invitationPlaceCategories;
+        this.places = places;
     }
 
 
@@ -107,6 +119,7 @@ public class Invitation extends BaseEntity {
         this.invitationPlace = invitationUpdateRequest.getInvitationPlace();
         this.comment = invitationUpdateRequest.getComment();
         this.date = invitationUpdateRequest.getDate();
+        this.time = invitationUpdateRequest.getTime();
     }
 
     public InvitationListResponse toInvitationListResponse(List<InvitationMemberDto> invitationMemberDto) {
@@ -118,6 +131,7 @@ public class Invitation extends BaseEntity {
                 .invitationPlace(invitationPlace)
                 .comment(comment)
                 .date(date)
+                .time(time)
                 .title(title)
                 .build();
     }
@@ -129,6 +143,7 @@ public class Invitation extends BaseEntity {
                 .title(title)
                 .invitationMemberDto(invitationMemberDto)
                 .date(date)
+                .time(time)
                 .invitationImageCategory(invitationImageCategory.toString())
                 .decidedPlaceDetailResponses(decidedPlaceDetailResponses)
                 .placeCategoryDto(placeCategoryDtos)
