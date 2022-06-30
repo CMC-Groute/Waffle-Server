@@ -58,6 +58,7 @@ public class InvitationService {
                 .comment(invitationCreateRequest.getComment())
                 .date(invitationCreateRequest.getDate())
                 .invitationPlace(invitationCreateRequest.getInvitationPlace())
+                .time(invitationCreateRequest.getTime())
                 .title(invitationCreateRequest.getTitle())
                 .invitationImageCategory(invitationImageCategory)
                 .organizerId(userId)

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class InvitationCreateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate date;
 
-    @JsonFormat(pattern = "HH:mm:ss", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "kk:mm:ss")
     private LocalTime time;
 
     private String comment;

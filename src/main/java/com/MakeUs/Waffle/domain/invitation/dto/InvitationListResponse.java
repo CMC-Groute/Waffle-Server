@@ -1,6 +1,7 @@
 package com.MakeUs.Waffle.domain.invitation.dto;
 
 import com.MakeUs.Waffle.domain.invationMember.dto.InvitationMemberDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +17,12 @@ import java.util.List;
 public class InvitationListResponse {
     private Long invitationId;
     private String title;
+    @JsonFormat(pattern = "yyyy년MM월dd일", timezone = "Asia/Seoul")
     private LocalDate date;
+
+    @JsonFormat(pattern = "H시m분", timezone = "Asia/Seoul")
     private LocalTime time;
+
     private String comment;
     private String invitationPlace;
     private String InvitationImageCategory;
