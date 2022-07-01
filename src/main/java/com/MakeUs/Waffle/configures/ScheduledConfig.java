@@ -17,7 +17,7 @@ public class ScheduledConfig {
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
 
-    @Scheduled(cron = "0 0 0 L * ?", zone = "Europe/Paris")
+    @Scheduled(cron = "0 1 0 * *  ?")
     public void updateInvitationExpiration() {
         invitationRepository.updateExpire(true,LocalDate.now().minusDays(1));
     }

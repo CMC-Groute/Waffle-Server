@@ -7,7 +7,6 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-
   mail:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
@@ -54,3 +53,5 @@ jwt:
   issuer: was
   client-secret: ${JWT_SECRET}
   expiry-seconds: 86400
+open:
+  api_key: ${REST_API_KEY}
