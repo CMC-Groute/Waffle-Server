@@ -30,6 +30,7 @@ jobs:
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
         echo MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} >> .env
         echo MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} >> .env
+        echo REST_API_KEY=${{ secrets.REST_API_KEY }} >> .env
         cat .env
           
     # 그래들 빌드
