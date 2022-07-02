@@ -5,7 +5,6 @@ import lombok.*;
 import java.sql.Date;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SearchPlaceRequest {
     int currentPage = 1;
