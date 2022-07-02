@@ -17,10 +17,9 @@ import java.util.List;
 public class InvitationListResponse {
     private Long invitationId;
     private String title;
-    @JsonFormat(pattern = "yyyy년MM월dd일", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "MM월 dd일", timezone = "Asia/Seoul")
     private LocalDate date;
-
-    @JsonFormat(pattern = "H시m분", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "a h시 m분", timezone = "Asia/Seoul")
     private LocalTime time;
 
     private String comment;
