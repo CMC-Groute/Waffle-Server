@@ -26,6 +26,7 @@ public class Place extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String comment;
@@ -41,8 +42,9 @@ public class Place extends BaseEntity {
 
     private Long placeCategoryId;
 
-    //좌표
-    //도로명주소
+    private String longitude;
+
+    private String latitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invitation_id")
@@ -52,7 +54,7 @@ public class Place extends BaseEntity {
     private List<PlaceLike> placeLikes = new ArrayList<>();
 
     @Builder
-    public Place(Long id, String title, String comment, String link, Boolean isDecision, Long seq, String roadNameAddress, Long placeCategoryId, Invitation invitation, List<PlaceLike> placeLikes) {
+    public Place(Long id, String title, String comment, String link, Boolean isDecision, Long seq, String roadNameAddress, Long placeCategoryId, String longitude, String latitude, Invitation invitation, List<PlaceLike> placeLikes) {
         this.id = id;
         this.title = title;
         this.comment = comment;
@@ -61,9 +63,12 @@ public class Place extends BaseEntity {
         this.seq = seq;
         this.roadNameAddress = roadNameAddress;
         this.placeCategoryId = placeCategoryId;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.invitation = invitation;
         this.placeLikes = placeLikes;
     }
+
 
     public void addPlaceLike(PlaceLike placeLike) {
         this.placeLikes.add(placeLike);
