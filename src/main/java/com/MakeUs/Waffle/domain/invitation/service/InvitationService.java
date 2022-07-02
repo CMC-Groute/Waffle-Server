@@ -8,6 +8,7 @@ import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
@@ -63,6 +64,16 @@ public class InvitationService {
                 .invitationImageCategory(invitationImageCategory)
                 .organizerId(userId)
                 .build();
+
+        invitationPlaceCategoryRepository.save(InvitationPlaceCategory.builder()
+                .invitation(invitation)
+                .placeCategory(PlaceCategory.CAFE)
+                .build());
+
+        invitationPlaceCategoryRepository.save(InvitationPlaceCategory.builder()
+                .invitation(invitation)
+                .placeCategory(PlaceCategory.FOOD)
+                .build());
 
         InvitationMember invitationMember = InvitationMember.builder()
                 .invitation(invitation)
