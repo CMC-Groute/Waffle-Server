@@ -128,4 +128,12 @@ public class PlaceService {
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
         return place.toPlaceDetailResponse();
     }
+
+    @Transactional
+    public Long updatePlace(Long userId,Long invitationId, Long placeId, UpdatePlaceRequest updatePlaceRequest){
+        invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
+        place.updatePlaceInfo(updatePlaceRequest);
+        return placeId;
+    }
 }

@@ -5,12 +5,14 @@ import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.UpdatePlaceRequest;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
 import com.MakeUs.Waffle.domain.placeLikes.dto.PlaceLikesDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Objects;
 @Table(name = "place")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@DynamicUpdate
 public class Place extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,6 +103,16 @@ public class Place extends BaseEntity {
 
     public void updateSeq(Long seq){
         this.seq = seq;
+    }
+
+    public void updatePlaceInfo(UpdatePlaceRequest updatePlaceRequest){
+        this.title = updatePlaceRequest.getTitle();
+        this.comment= updatePlaceRequest.getComment();
+        this.placeCategoryId = updatePlaceRequest.getPlaceCategoryId();
+        this.latitude = updatePlaceRequest.getLatitude();
+        this.longitude = updatePlaceRequest.getLongitude();
+        this.roadNameAddress = updatePlaceRequest.getRoadNameAddress();
+        this.link = updatePlaceRequest.getLink();
     }
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
