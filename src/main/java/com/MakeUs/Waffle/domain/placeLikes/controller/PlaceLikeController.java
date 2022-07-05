@@ -22,24 +22,23 @@ public class PlaceLikeController {
 
     //@Operation(summary = "장소 좋아요 생성 컨트롤러")
     @PostMapping("/invitation/place/{id}/likes")
-    public ResponseEntity<Void> saveCommentLikes(
+    public ResponseEntity<ApiResponse<Long>> saveCommentLikes(
             @AuthenticationPrincipal JwtAuthentication token, @PathVariable Long id
     ) {
 
-        placeLikeService.savePlaceLike(
+        return ResponseEntity.ok(ApiResponse.of(placeLikeService.savePlaceLike(
                 token.getId(),
                 id
-        );
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        )));
     }
 
     //@Operation(summary = "장소 좋아요 삭제 컨트롤러")
     @DeleteMapping("/invitation/place/{id}/likes")
-    public ResponseEntity<Void> deleteCommentLikes(
+    public ResponseEntity<ApiResponse<Long>> deleteCommentLikes(
             @AuthenticationPrincipal JwtAuthentication token, @PathVariable Long id
     ) {
-     placeLikeService.deletePlaceLike(
-                token.getId(), id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.of( placeLikeService.deletePlaceLike(
+                token.getId(), id)
+        ));
     }
 }

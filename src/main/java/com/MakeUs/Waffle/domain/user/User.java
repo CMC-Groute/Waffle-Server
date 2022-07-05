@@ -1,6 +1,7 @@
 package com.MakeUs.Waffle.domain.user;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
+import com.MakeUs.Waffle.domain.user.dto.UserDetailResponse;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
@@ -83,5 +84,13 @@ public class User extends BaseEntity {
     public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
         this.nickname = userUpdateRequest.getNickname();
         this.profileImage = userUpdateRequest.getEnumProfileImage(userUpdateRequest.getProfileImage());
+    }
+
+    public UserDetailResponse toUserDetailResponse(){
+        return UserDetailResponse.builder()
+                .email(email)
+                .nickname(nickname)
+                .profileImage(profileImage.toString())
+                .build();
     }
 }

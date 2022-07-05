@@ -64,11 +64,12 @@ public class InvitationPlaceCategoryService {
     }
 
     @Transactional
-    public void deleteInvitationPlaceCategory(Long userId, Long invitationId, Long  placeCategoryId) {
+    public Long deleteInvitationPlaceCategory(Long userId, Long invitationId, Long  placeCategoryId) {
         invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
                 .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
 
         invitationPlaceCategoryRepository.deleteById(placeCategoryId);
         placeRepository.deleteByPlaceCategoryId(placeCategoryId);
+        return placeCategoryId;
     }
 }
