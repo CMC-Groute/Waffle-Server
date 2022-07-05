@@ -19,11 +19,11 @@ public class InvitationMemberController {
     }
 
     @DeleteMapping("/invitations/{id}/invitationMember")
-    public ResponseEntity<ApiResponse<Void>> exitInvitationMember(
+    public ResponseEntity<ApiResponse<Long>> exitInvitationMember(
             @AuthenticationPrincipal JwtAuthentication token,
             @PathVariable("id") Long invitationId
     ) {
-        invitationMemberService.exitInvitationMember(token.getId(),invitationId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.of(
+                invitationMemberService.exitInvitationMember(token.getId(),invitationId)));
     }
 }

@@ -89,11 +89,12 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<Void> updatePassword(
+    public ResponseEntity<ApiResponse<Long>> updatePassword(
             @AuthenticationPrincipal JwtAuthentication token
     ){
-        userService.deleteUser(token.getId());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.of(userService.deleteUser(
+                token.getId()
+        )));
     }
 
     @GetMapping("/users")

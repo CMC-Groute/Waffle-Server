@@ -97,10 +97,11 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id){
+    public Long deleteUser(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
         userRepository.delete(user);
         invitationMemberRepository.deleteByUser(user);
+        return id;
     }
 
     public UserDetailResponse getUser(Long userId) {
