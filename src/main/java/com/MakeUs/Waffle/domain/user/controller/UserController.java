@@ -95,4 +95,14 @@ public class UserController {
         userService.deleteUser(token.getId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping(value = "/refresh") //프론트에서 JWT at/rt 함께 보내 두 토큰 모두 refresh 하도록 설계
+    public ResponseEntity<?> refreshDeviceToken(@AuthenticationPrincipal JwtAuthentication token, @RequestHeader("deviceToken") String deviceToken) {
+        try {
+            userService.updateDeviceToken(deviceToken, token.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

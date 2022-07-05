@@ -102,4 +102,9 @@ public class UserService {
         userRepository.delete(user);
         invitationMemberRepository.deleteByUser(user);
     }
+
+    @Transactional
+    public void updateDeviceToken(String deviceToken, Long userId){
+        userRepository.updateDeviceTokenByUserId(deviceToken, userId);
+    }
 }

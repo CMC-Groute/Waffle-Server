@@ -48,17 +48,22 @@ public class User extends BaseEntity {
 
     private boolean isAgreedMarketing;
 
+    @Column(name = "deviceToken", nullable = false)
+    private String deviceToken;
+
     @Builder
-    public User(Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
+    public User(Long id, String nickname, String email, Role roles, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing, String deviceToken) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
-        this.roles = Role.ROLE_USER;
+        this.roles = roles;
         this.password = password;
         this.profileImage = profileImage;
         this.isDeleted = isDeleted;
         this.isAgreedMarketing = isAgreedMarketing;
+        this.deviceToken = deviceToken;
     }
+
 
     public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
