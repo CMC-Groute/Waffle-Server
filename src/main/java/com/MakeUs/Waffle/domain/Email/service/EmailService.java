@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.Email.repository.EmailCodeRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+
+import static com.MakeUs.Waffle.error.ErrorCode.DUPLICATE_USER_ERROR;
 import static com.MakeUs.Waffle.error.ErrorCode.NOT_FOUND_USER;
 
 @Slf4j
@@ -41,6 +44,9 @@ public class EmailService {
     private static final Long EXPIRATION = 180000L;
 
     public void sendMessage(String receiver) {
+        if(userRepository.existsByEmail(receiver)){
+            throw new DuplicatedResourceException(DUPLICATE_USER_ERROR);
+        }
         final String code = createCode();
         EmailCode findEmailCode = emailCodeRepository.getByEmail(receiver);
         if(findEmailCode == null){

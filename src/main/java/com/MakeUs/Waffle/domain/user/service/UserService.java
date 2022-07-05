@@ -90,9 +90,8 @@ public class UserService {
     public Long updatePassword(Long id, UserPasswordRequest userPasswordRequest){
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
         user.checkPassword(passwordEncoder,userPasswordRequest.getNowPassword());
-        if(!userPasswordRequest.isDifferentPassword()){
-            user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());
-        }
+        user.updateUserPasswordInfo(passwordEncoder, userPasswordRequest.getNewPassword());
+
         return user.getId();
     }
 
