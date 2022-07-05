@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum InvitationImageCategory {
     CHOCO("CHOCO"),
     BLUEBERRY("BLUEBERRY"),
-    VANILA("VANILA"),
+    VANILLA("VANILLA"),
     STRAWBERRY("STRAWBERRY"),
     MALCHA("MALCHA");
 
