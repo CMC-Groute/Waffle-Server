@@ -30,7 +30,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        errorCode.getCode(),
                         errorCode.getMessage()
                 ));
     }
