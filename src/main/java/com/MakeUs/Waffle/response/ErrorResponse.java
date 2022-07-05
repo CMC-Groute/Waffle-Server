@@ -10,20 +10,17 @@ import lombok.NoArgsConstructor;
 public class ErrorResponse {
 
     private int status;
-    private String code;
-    private String message;
+    private String data;
 
-    public ErrorResponse(int status, String code, String message) {
+    public ErrorResponse(int status, String data) {
         this.status = status;
-        this.code = code;
-        this.message = message;
+        this.data = data;
     }
 
     public static ErrorResponse of(ErrorCodedException ex) {
         return new ErrorResponse(
                 ex.getHttpStatus()
                         .value(),
-                ex.getErrorCode(),
                 ex.getMessage()
         );
     }
