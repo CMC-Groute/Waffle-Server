@@ -95,4 +95,13 @@ public class UserController {
         userService.deleteUser(token.getId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<ApiResponse<UserDetailResponse>> getUser(
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        return ResponseEntity.ok(ApiResponse.of(userService.getUser(
+                token.getId()
+        )));
+    }
 }
