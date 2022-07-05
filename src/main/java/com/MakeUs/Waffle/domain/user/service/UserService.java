@@ -2,6 +2,7 @@ package com.MakeUs.Waffle.domain.user.service;
 
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.user.User;
+import com.MakeUs.Waffle.domain.user.dto.UserDetailResponse;
 import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
 import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
@@ -96,9 +97,16 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id){
+    public Long deleteUser(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
         userRepository.delete(user);
         invitationMemberRepository.deleteByUser(user);
+        return id;
+    }
+
+    public UserDetailResponse getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+
+        return user.toUserDetailResponse();
     }
 }

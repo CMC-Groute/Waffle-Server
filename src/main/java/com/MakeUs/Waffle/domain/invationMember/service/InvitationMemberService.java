@@ -25,7 +25,7 @@ public class InvitationMemberService {
     }
 
     @Transactional
-    public void exitInvitationMember(Long userId, Long invitationId) {
+    public Long exitInvitationMember(Long userId, Long invitationId) {
         Invitation invitation = invitationRepository.findById(invitationId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
 
@@ -38,5 +38,7 @@ public class InvitationMemberService {
             System.out.println("isnull");
             invitationRepository.delete(invitation);
         }
+
+        return invitationId;
     }
 }

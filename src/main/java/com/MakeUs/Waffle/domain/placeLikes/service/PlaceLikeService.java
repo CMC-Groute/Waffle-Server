@@ -26,7 +26,7 @@ public class PlaceLikeService {
 
 
     @Transactional
-    public void savePlaceLike(Long userId, Long placeId) {
+    public Long savePlaceLike(Long userId, Long placeId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
@@ -43,6 +43,7 @@ public class PlaceLikeService {
                     .build();
              placeLikesRepository.save(placeLike);
         }
+        return placeId;
     }
 
     @Transactional
