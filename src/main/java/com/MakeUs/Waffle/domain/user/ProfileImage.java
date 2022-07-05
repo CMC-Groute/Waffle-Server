@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ProfileImage {
-    INITIAL("INITIAL"),
-    TWO("TWO");
+    WAFFLE("WAFFLE"),
+    CHOCO("CHOCO"),
+    BLUEBERRY("BLUEBERRY"),
+    VANILLA("VANILLA"),
+    STRAWBERRY("STRAWBERRY"),
+    MALCHA("MALCHA");
 
     private String profileImage;
 

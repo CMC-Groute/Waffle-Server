@@ -33,7 +33,7 @@ public class PlaceController {
     }
 
     //@Operation("summary = "장소 확정하기")
-    @PutMapping("/invitations/{invitationId}/place/{id}")
+    @PutMapping("/invitations/{invitationId}/place/{id}/decide")
     public ResponseEntity<ApiResponse<Long>> decidePlace(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("id") Long placeId,
@@ -89,5 +89,16 @@ public class PlaceController {
             @AuthenticationPrincipal JwtAuthentication token
     ){
         return ResponseEntity.ok(ApiResponse.of(placeService.getDetailPlace(token.getId(),invitationId,placeId)));
+    }
+
+    //@Operation("summary = "장소 수정하기")
+    @PutMapping("/invitations/{invitationId}/place/{placeId}")
+    public ResponseEntity<ApiResponse<Long>> updatePlace(
+            @PathVariable("invitationId") Long invitationId,
+            @PathVariable("placeId") Long placeId,
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestBody UpdatePlaceRequest updatePlaceRequest
+    ){
+        return ResponseEntity.ok(ApiResponse.of(placeService.updatePlace(token.getId(),invitationId,placeId,updatePlaceRequest)));
     }
 }

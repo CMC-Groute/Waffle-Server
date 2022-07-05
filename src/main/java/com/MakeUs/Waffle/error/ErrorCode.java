@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_FOUND_PLACE("M001", "존재하지 않는 장소입니다."),
 
     NOT_MATCH_INVITATION_MEMBER("C002","초대되지 않은 회원입니다."),
+    DUPLICATE_INVITATION_MEMBER_ERROR("C002","이미 가입된 회원입니다."),
     NOT_FOUND_INVITATION("C003","존재하지 않는 초대장입니다."),
     NOT_MATCH_INVITATION_CODE("C004","유효하지 않은 초대장 코드 입니다."),
 

@@ -51,7 +51,7 @@ public class UserService {
 
     @Transactional
     public Long signUp(UserSignUpRequest userSignUpRequest) {
-        if ((!isDuplicateUser(userSignUpRequest)) && !userSignUpRequest.isDifferentPassword()) {
+        if ((!isDuplicateUser(userSignUpRequest))) {
             userSignUpRequest.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
         }
 

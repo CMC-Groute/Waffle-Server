@@ -26,8 +26,6 @@ public class UserSignUpRequest {
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9]).{6,20}$", message = "비밀번호는 숫자,영문을 조합해야 합니다.")
     private String password;
 
-    @NotBlank(message = "비밀번호를 입력해 주세요.")
-    private String checkPassword;
 
     @Size(max = 6)
     @NotBlank(message = "닉네임을 입력해 주세요.")
@@ -40,10 +38,9 @@ public class UserSignUpRequest {
 
     protected UserSignUpRequest(){}
 
-    public UserSignUpRequest(String email, String password, String checkPassword, String nickname, Boolean isAgreedMarketing, String profileImage) {
+    public UserSignUpRequest(String email, String password, String nickname, Boolean isAgreedMarketing, String profileImage) {
         this.email = email;
         this.password = password;
-        this.checkPassword = checkPassword;
         this.nickname = nickname;
         this.isAgreedMarketing = isAgreedMarketing;
         this.profileImage = profileImage;
@@ -55,13 +52,6 @@ public class UserSignUpRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isDifferentPassword() {
-        if (!this.password.equals(this.checkPassword)) {
-            throw new NotMatchResourceException(ErrorCode.NOT_MATCH_PASSWORD);
-        }
-        return false;
     }
 
     public User toEntity() {

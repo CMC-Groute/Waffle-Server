@@ -5,12 +5,14 @@ import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceDetailResponse;
+import com.MakeUs.Waffle.domain.place.dto.UpdatePlaceRequest;
 import com.MakeUs.Waffle.domain.placeLikes.PlaceLike;
 import com.MakeUs.Waffle.domain.placeLikes.dto.PlaceLikesDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,11 +23,13 @@ import java.util.Objects;
 @Table(name = "place")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@DynamicUpdate
 public class Place extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String comment;
@@ -41,8 +45,9 @@ public class Place extends BaseEntity {
 
     private Long placeCategoryId;
 
-    //좌표
-    //도로명주소
+    private String longitude;
+
+    private String latitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invitation_id")
@@ -52,7 +57,7 @@ public class Place extends BaseEntity {
     private List<PlaceLike> placeLikes = new ArrayList<>();
 
     @Builder
-    public Place(Long id, String title, String comment, String link, Boolean isDecision, Long seq, String roadNameAddress, Long placeCategoryId, Invitation invitation, List<PlaceLike> placeLikes) {
+    public Place(Long id, String title, String comment, String link, Boolean isDecision, Long seq, String roadNameAddress, Long placeCategoryId, String longitude, String latitude, Invitation invitation, List<PlaceLike> placeLikes) {
         this.id = id;
         this.title = title;
         this.comment = comment;
@@ -61,9 +66,12 @@ public class Place extends BaseEntity {
         this.seq = seq;
         this.roadNameAddress = roadNameAddress;
         this.placeCategoryId = placeCategoryId;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.invitation = invitation;
         this.placeLikes = placeLikes;
     }
+
 
     public void addPlaceLike(PlaceLike placeLike) {
         this.placeLikes.add(placeLike);
@@ -95,6 +103,16 @@ public class Place extends BaseEntity {
 
     public void updateSeq(Long seq){
         this.seq = seq;
+    }
+
+    public void updatePlaceInfo(UpdatePlaceRequest updatePlaceRequest){
+        this.title = updatePlaceRequest.getTitle();
+        this.comment= updatePlaceRequest.getComment();
+        this.placeCategoryId = updatePlaceRequest.getPlaceCategoryId();
+        this.latitude = updatePlaceRequest.getLatitude();
+        this.longitude = updatePlaceRequest.getLongitude();
+        this.roadNameAddress = updatePlaceRequest.getRoadNameAddress();
+        this.link = updatePlaceRequest.getLink();
     }
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {

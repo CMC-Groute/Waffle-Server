@@ -5,15 +5,15 @@ import lombok.Getter;
 @Getter
 public class ApiResponse<T> {
 
-    private String message;
+    private int status;
     private T data;
 
-    private ApiResponse(String message, T data) {
-        this.message = message;
+    private ApiResponse(int status, T data) {
+        this.status = status;
         this.data = data;
     }
 
     public static <T> ApiResponse<T> of(T data) {
-        return new ApiResponse<>("success", data);
+        return new ApiResponse<>(200, data);
     }
 }

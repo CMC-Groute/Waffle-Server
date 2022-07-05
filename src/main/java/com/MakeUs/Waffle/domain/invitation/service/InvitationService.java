@@ -8,6 +8,7 @@ import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.invitation.dto.*;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.PlaceCategory;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
@@ -15,6 +16,7 @@ import com.MakeUs.Waffle.domain.place.service.PlaceService;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
+import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
@@ -64,6 +66,16 @@ public class InvitationService {
                 .organizerId(userId)
                 .build();
 
+        invitationPlaceCategoryRepository.save(InvitationPlaceCategory.builder()
+                .invitation(invitation)
+                .placeCategory(PlaceCategory.CAFE)
+                .build());
+
+        invitationPlaceCategoryRepository.save(InvitationPlaceCategory.builder()
+                .invitation(invitation)
+                .placeCategory(PlaceCategory.FOOD)
+                .build());
+
         InvitationMember invitationMember = InvitationMember.builder()
                 .invitation(invitation)
                 .user(user)
@@ -101,6 +113,9 @@ public class InvitationService {
         Invitation invitation = invitationRepository.findByInvitationCode(invitationCodeRequest.getInvitationCode())
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_MATCH_INVITATION_CODE));
 
+        if(invitationMemberRepository.existsByUserIdAndInvitationId(userId,invitation.getId())){
+            throw new DuplicatedResourceException(ErrorCode.DUPLICATE_INVITATION_MEMBER_ERROR);
+        }
         InvitationMember invitationMember = InvitationMember.builder()
                 .invitation(invitation)
                 .user(user)
