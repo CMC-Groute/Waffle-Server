@@ -20,4 +20,6 @@ public interface InvitationMemberRepository extends JpaRepository<InvitationMemb
     List<InvitationMember> getByInvitationId(Long invitationId);
 
     List<InvitationMember> deleteByUser(User user);
+
+    Optional<List<InvitationMember>> findByInvitationId(Long invitationId);
 }

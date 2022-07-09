@@ -55,3 +55,5 @@ jwt:
   expiry-seconds: 86400
 open:
   api_key: ${REST_API_KEY}
+fcm:
+  api_url: ${FCM_API_URL}
