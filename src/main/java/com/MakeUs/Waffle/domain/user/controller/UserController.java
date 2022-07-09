@@ -47,6 +47,8 @@ public class UserController {
         JwtAuthentication principal = (JwtAuthentication) jwtAuthenticationToken.getPrincipal();
         User user = (User) jwtAuthenticationToken.getDetails();
 
+        userService.updateDeviceToken(userSignInRequest.getDeviceToken(), user.getId());
+
         return ResponseEntity.ok(ApiResponse.of(new UserToken(
                 user.getId(),
                 principal.getToken(),

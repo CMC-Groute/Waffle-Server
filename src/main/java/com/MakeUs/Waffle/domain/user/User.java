@@ -48,8 +48,11 @@ public class User extends BaseEntity {
 
     private boolean isAgreedMarketing;
 
+    @Column(name = "deviceToken")
+    private String deviceToken;
+
     @Builder
-    public User(Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
+    public User(String deviceToken, Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
@@ -58,6 +61,7 @@ public class User extends BaseEntity {
         this.profileImage = profileImage;
         this.isDeleted = isDeleted;
         this.isAgreedMarketing = isAgreedMarketing;
+        this.deviceToken = deviceToken;
     }
 
     public List<GrantedAuthority> getAuthorities() {
@@ -83,5 +87,9 @@ public class User extends BaseEntity {
     public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
         this.nickname = userUpdateRequest.getNickname();
         this.profileImage = userUpdateRequest.getEnumProfileImage(userUpdateRequest.getProfileImage());
+    }
+
+    public void updateDeviceToken(String deviceToken){
+        this.deviceToken=deviceToken;
     }
 }
