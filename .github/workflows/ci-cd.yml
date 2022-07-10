@@ -27,15 +27,6 @@ jobs:
 #         touch ./service-account.json
 #         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
         
-    # secret 방식으로 추가하기
-    - name: Read value from Properties-file
-      id: read_property
-      uses: christian-draeger/read-properties@1.0.1
-      with:
-        path: './src/main/resources/application.yml'
-        property: 'application'
-    - name: Do something with your bumped release version
-      run: echo ${{ secrets.APPLICATION}}
 
     # 그래들 빌드
     - uses: actions/checkout@v2
@@ -52,6 +43,13 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test
       
+    # secret 방식으로 추가하기
+    - name: 'Create application file'
+      run: |
+        cd ./src/main/resources
+        touch ./application.yml
+        echo "${{ secrets.APPLICATION }}" > ./application.yml
+      shell: bash
       
       # 도커허브 로그인
     - name: Login to DockerHub
