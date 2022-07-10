@@ -88,5 +88,5 @@ jobs:
           sudo docker rm waffle-docker
           sudo docker rmi $(sudo docker images -f dangling=true -q)
           sudo docker pull kcwthing1210/waffle:latest
-          sudo docker run -p 80:8080 --name waffle-docker kcwthing1210/waffle
+          sudo docker run -e "DB_URL=jdbc:mysql://waffle-db.c9srbngezgoz.ap-northeast-2.rds.amazonaws.com:3306/waffle" -p 80:8080 --name waffle-docker kcwthing1210/waffle
           echo "────────────배포완료───────────────────"
