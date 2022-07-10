@@ -49,8 +49,6 @@ jobs:
         cd ./src/main/resources
         touch ./application.yml
         echo "${{ secrets.APPLICATION }}" > ./application.yml
-        touch ./.env
-        echo "${{ secrets.ENV }}" > ./.env
       shell: bash
 
       
