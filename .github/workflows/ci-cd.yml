@@ -53,7 +53,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew bootJar
+      run: ./gradlew build -x test
       
       
       # 도커허브 로그인
