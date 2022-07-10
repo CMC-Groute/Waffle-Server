@@ -2,19 +2,17 @@ package com.MakeUs.Waffle.domain.push.service;
 
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
-import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.error.ErrorCode;
-import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,9 +96,9 @@ public class PushService {
     }
 
     private static String getAccessToken() throws IOException {
-        ClassPathResource resource = new ClassPathResource("keystore/service-account.json");
+        Resource resource = new ClassPathResource("keystore/service-account.json");
         GoogleCredential googleCredential = GoogleCredential
-                .fromStream(new FileInputStream(resource.getFile()))
+                .fromStream(resource.getInputStream())
                 .createScoped(Arrays.asList(SCOPES));
         googleCredential.refreshToken();
         return googleCredential.getAccessToken();
