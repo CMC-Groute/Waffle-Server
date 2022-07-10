@@ -30,7 +30,7 @@ jobs:
     # secret 방식으로 추가하기
     - name: 'Create application file'
       run: |
-        cd src/main/resources
+        cd /src/main/resources
         touch ./application.yml
         echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash   
