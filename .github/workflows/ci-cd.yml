@@ -20,25 +20,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#         # create firebase-key.json
-#     - name: create firebase key
-#       run: |
-#         cd ./src/main/resources/keystore
-#         touch ./service-account.json
-#         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
-        
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1.3
-      with:
-        DB_URL: ${{ secrets.DB_URL }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PWD: ${{ secrets.DB_PWD }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-        MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-        REST_API_KEY: ${{ secrets.REST_API_KEY }}
-        file_name: .env
-        fail_on_empty: false
+    # create firebase-key.json
+    - name: create firebase key
+      run: |
+        cd ./src/main/resources/keystore
+        touch ./service-account.json
+        echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
 
     # 그래들 빌드
     - uses: actions/checkout@v2
@@ -96,5 +83,5 @@ jobs:
           sudo docker rm waffle-docker
           sudo docker rmi $(sudo docker images -f dangling=true -q)
           sudo docker pull kcwthing1210/waffle:latest
-          sudo docker run -e "DB_URL=jdbc:mysql://waffle-db.c9srbngezgoz.ap-northeast-2.rds.amazonaws.com:3306/waffle" -p 80:8080 --name waffle-docker kcwthing1210/waffle
+          sudo docker run -p 80:8080 --name waffle-docker kcwthing1210/waffle
           echo "────────────배포완료───────────────────"
