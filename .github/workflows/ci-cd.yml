@@ -27,6 +27,18 @@ jobs:
 #         touch ./service-account.json
 #         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
         
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1.3
+      with:
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PWD: ${{ secrets.DB_PWD }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+        REST_API_KEY: ${{ secrets.REST_API_KEY }}
+        file_name: .env
+        fail_on_empty: false
 
     # 그래들 빌드
     - uses: actions/checkout@v2
@@ -44,13 +56,13 @@ jobs:
       run: ./gradlew build -x test
       
     # secret 방식으로 추가하기
-    - name: 'Create application file'
-      run: |
-        cd ./src/main/resources
-        touch ./application.yml
-        echo "${{ secrets.APPLICATION }}" > ./application.yml
-        cat application.yml
-      shell: bash
+#     - name: 'Create application file'
+#       run: |
+#         cd ./src/main/resources
+#         touch ./application.yml
+#         echo "${{ secrets.APPLICATION }}" > ./application.yml
+#         cat application.yml
+#       shell: bash
       
       # 도커허브 로그인
     - name: Login to DockerHub
