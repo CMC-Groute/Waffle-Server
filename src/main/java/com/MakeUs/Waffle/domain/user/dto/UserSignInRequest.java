@@ -16,11 +16,14 @@ public class UserSignInRequest {
     @Size(min = 8, message = "비밀번호는 최소 8글자 이상입니다.")
     private String password;
 
+    private String deviceToken;
+
     protected UserSignInRequest() {
     }
 
-    public UserSignInRequest(String email, String password) {
+    public UserSignInRequest(String email, String password, String deviceToken) {
         this.email = email;
         this.password = password;
+        this.deviceToken = deviceToken;
     }
 }

@@ -100,7 +100,7 @@ public class InvitationService {
     }
 
     public String getInvitationImageCategory(){
-        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILA","STRAWBERRY", "MALCHA"};
+        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILLA","STRAWBERRY", "MALCHA"};
         int idx = (int) (5 * Math.random());
         return stringSet[idx];
     }

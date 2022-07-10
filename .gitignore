@@ -38,3 +38,4 @@ out/
 
 # JDT-specific (Eclipse Java Development Tools)
 .env
+src/main/resources/keystore/service-account.json

@@ -51,6 +51,12 @@ public class UserService {
     }
 
     @Transactional
+    public void updateDeviceToken(String deviceToken,Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        user.updateDeviceToken(deviceToken);
+    }
+
+    @Transactional
     public Long signUp(UserSignUpRequest userSignUpRequest) {
         if ((!isDuplicateUser(userSignUpRequest))) {
             userSignUpRequest.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
