@@ -90,8 +90,9 @@ public class User extends BaseEntity {
         this.profileImage = userUpdateRequest.getEnumProfileImage(userUpdateRequest.getProfileImage());
     }
 
-    public void updateDeviceToken(String deviceToken){
-        this.deviceToken=deviceToken;
+    public void updateDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
         
     public UserDetailResponse toUserDetailResponse(){
         return UserDetailResponse.builder()
