@@ -50,7 +50,6 @@ jobs:
         touch ./application.yml
         echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash
-
       
       # 도커허브 로그인
     - name: Login to DockerHub
