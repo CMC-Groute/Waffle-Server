@@ -33,12 +33,12 @@ jobs:
         echo REST_API_KEY=${{ secrets.REST_API_KEY }} >> .env
         cat .env
         
-    # create firebase-key.json
-    - name: create firebase key
-      run: |
-        cd ./src/main/resources/keystore
-        touch ./service-account.json
-        echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
+#     # create firebase-key.json
+#     - name: create firebase key
+#       run: |
+#         cd ./src/main/resources/keystore
+#         touch ./service-account.json
+#         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
       
     # 그래들 빌드
     - uses: actions/checkout@v2
@@ -81,5 +81,6 @@ jobs:
         username: ${{ secrets.AWS_USER }}
         key: ${{ secrets.AWS_SSH_KEY }}
         port: ${{ secrets.AWS_PORT }}
+        envs: GITHUB_SHA
         script: |
           bash deploy.sh
