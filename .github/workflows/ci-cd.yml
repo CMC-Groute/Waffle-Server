@@ -23,8 +23,8 @@ jobs:
     # .env - secret 방식으로 추가하기
     - name: 'Create env file'
       run: |
-        touch /.env
-        echo "${{ secrets.env }}" > /.env
+        touch .env
+        echo "${{ secrets.env }}" > .env
       shell: bash   
 
 #     # create firebase-key.json
