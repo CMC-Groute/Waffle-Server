@@ -43,12 +43,20 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test
       
-    # secret 방식으로 추가하기
-    - name: 'Create application file'
+#     # secret 방식으로 추가하기
+#     - name: 'Create application file'
+#       run: |
+#         cd ./src/main/resources
+#         touch ./application.yml
+#         echo "${{ secrets.APPLICATION }}" > ./application.yml
+#       shell: bash
+
+    # env 방식으로 추가하기
+    - name: 'Create env file'
       run: |
-        cd ./src/main/resources
-        touch ./application.yml
-        echo "${{ secrets.APPLICATION }}" > ./application.yml
+ 
+        touch ./.env
+        echo "${{ secrets.ENV }}" > ./.env
       shell: bash
       
       # 도커허브 로그인
