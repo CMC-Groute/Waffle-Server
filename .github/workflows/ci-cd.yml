@@ -74,4 +74,10 @@ jobs:
         key: ${{ secrets.AWS_SSH_KEY }}
         port: ${{ secrets.AWS_PORT }}
         script: |
-          bash deploy.sh
+          sudo docker stop waffle-docker
+          sudo docker rm waffle-docker
+          sudo docker rmi $(sudo docker images -f dangling=true -q)
+          sudo docker pull kcwthing1210/waffle:latest
+          sudo docker run -p 80:8080 --name waffle-docker kcwthing1210/waffle
+          echo "────────────배포완료───────────────────"
+
