@@ -20,13 +20,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # create firebase-key.json
-    - name: create firebase key
-      run: |
-        cd ./src/main/resources/keystore
-        touch ./service-account.json
-        echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
-
     # 그래들 빌드
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -41,6 +34,13 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build -x test
+      
+    # create firebase-key.json
+    - name: create firebase key
+      run: |
+        cd ./src/main/resources/keystore
+        touch ./service-account.json
+        echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
       
     # secret 방식으로 추가하기
 #     - name: 'Create application file'
