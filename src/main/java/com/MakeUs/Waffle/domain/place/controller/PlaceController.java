@@ -43,7 +43,7 @@ public class PlaceController {
     }
 
     //@Operation("summary = "장소 확정 취소하기")
-    @DeleteMapping("/invitations/{invitationId}/place/{id}")
+    @PutMapping("/invitations/{invitationId}/place/{id}")
     public ResponseEntity<ApiResponse<Long>> cancelDecidePlace(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("id") Long placeId,
@@ -100,5 +100,15 @@ public class PlaceController {
             @Valid @RequestBody UpdatePlaceRequest updatePlaceRequest
     ){
         return ResponseEntity.ok(ApiResponse.of(placeService.updatePlace(token.getId(),invitationId,placeId,updatePlaceRequest)));
+    }
+
+    //@Operation("summary = "장소 삭제 하기")
+    @DeleteMapping("/invitations/{invitationId}/place/{id}")
+    public ResponseEntity<ApiResponse<Long>> deletePlace(
+            @PathVariable("invitationId") Long invitationId,
+            @PathVariable("id") Long placeId,
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        return ResponseEntity.ok(ApiResponse.of(placeService.deletePlace(token.getId(),placeId,invitationId)));
     }
 }

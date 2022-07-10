@@ -136,4 +136,10 @@ public class PlaceService {
         place.updatePlaceInfo(updatePlaceRequest);
         return placeId;
     }
+
+    public Long deletePlace(Long id, Long placeId, Long invitationId) {
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
+        placeRepository.delete(place);
+        return placeId;
+    }
 }

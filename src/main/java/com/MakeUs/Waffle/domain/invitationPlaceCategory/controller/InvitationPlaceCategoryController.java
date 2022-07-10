@@ -32,12 +32,13 @@ public class InvitationPlaceCategoryController {
     }
     //@Operation(summary = "카테고리 삭제 컨트롤러")
     @DeleteMapping("/invitations/{invitationId}/placeCategory/{placeCategoryId}")
-    public ResponseEntity<ApiResponse<List<CreatePlaceCategoryResponse>>> deletePlaceCategory(
+    public ResponseEntity<ApiResponse<Long>> deletePlaceCategory(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("placeCategoryId") Long placeCategoryId,
             @AuthenticationPrincipal JwtAuthentication token
     ) {
-        invitationPlaceCategoryService.deleteInvitationPlaceCategory(token.getId(),invitationId,placeCategoryId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.of(
+                invitationPlaceCategoryService.deleteInvitationPlaceCategory(token.getId(),invitationId,placeCategoryId)
+        ));
     }
 }

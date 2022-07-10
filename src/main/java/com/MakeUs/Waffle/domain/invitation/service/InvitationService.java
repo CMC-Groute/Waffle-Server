@@ -120,8 +120,8 @@ public class InvitationService {
                 .invitation(invitation)
                 .user(user)
                 .build();
-
-        return invitationMemberRepository.save(invitationMember).getId();
+        invitationMemberRepository.save(invitationMember).getId();
+        return invitation.getId();
     }
 
     @Transactional(readOnly = true)
