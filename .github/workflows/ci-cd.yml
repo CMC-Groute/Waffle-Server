@@ -21,10 +21,11 @@ jobs:
 
     steps:
     # .env - secret 방식으로 추가하기
-    - name: 'Create env file'
+    - name: 'Create application file'
       run: |
-        touch .env
-        echo "${{ secrets.env }}" > .env
+        cd ./src/main/resources
+        touch ./application.yml
+        echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash   
 
 #     # create firebase-key.json
