@@ -36,7 +36,7 @@ jobs:
     # create firebase-key.json
     - name: create firebase key
       run: |
-        cd ./src/main/resources
+        cd ./src/main/resources/keystore
         touch ./service-account.json
         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
       
