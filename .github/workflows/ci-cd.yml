@@ -47,8 +47,8 @@ jobs:
     - name: 'Create application file'
       run: |
         cd ./src/main/resources
-        touch ./application.yml
-        echo "${{ secrets.APPLICATION }}" > ./application.yml
+        touch application.yml
+        echo "${{ secrets.APPLICATION }}" > application.yml
       shell: bash
       
       # 도커허브 로그인
