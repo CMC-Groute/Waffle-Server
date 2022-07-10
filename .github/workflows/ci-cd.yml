@@ -20,6 +20,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+        # create firebase-key.json
+    - name: create firebase key
+      run: |
+        cd ./src/main/resources/keystore
+        touch ./service-account.json
+        echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
+        
     # .env - secret 방식으로 추가하기
     - name: 'Create application file'
       run: |
@@ -27,13 +34,6 @@ jobs:
         touch ./application.yml
         echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash   
-
-#     # create firebase-key.json
-#     - name: create firebase key
-#       run: |
-#         cd ./src/main/resources/keystore
-#         touch ./service-account.json
-#         echo "${{ secrets.FIREBASE_KEY }}" > ./service-account.json
       
     # 그래들 빌드
     - uses: actions/checkout@v2
