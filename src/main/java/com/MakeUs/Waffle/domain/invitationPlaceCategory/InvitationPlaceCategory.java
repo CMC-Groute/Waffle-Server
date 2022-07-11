@@ -47,7 +47,7 @@ public class InvitationPlaceCategory extends BaseEntity {
     public CreatePlaceCategoryResponse toCreatePlaceCategoryResponse(){
         return CreatePlaceCategoryResponse.builder()
                 .placeCategoryId(id)
-                .name(placeCategory.toString())
+                .placeCategoryName(placeCategory.toString())
                 .build();
     }
 
