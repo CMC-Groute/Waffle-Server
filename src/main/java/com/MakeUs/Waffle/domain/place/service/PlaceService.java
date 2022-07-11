@@ -82,7 +82,17 @@ public class PlaceService {
         invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
 
         List<Place> places = placeRepository.getByInvitationAndIsDecisionTrueOrderBySeq(invitation);
-        return places.stream().map(Place::toDecidedPlaceDetailResponse).collect(Collectors.toList());
+        List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses = new ArrayList<>();
+        for(Place place : places){
+            if(placeLikesRepository.existsByUserIdAndPlace(userId,place)){
+                decidedPlaceDetailResponses.add(place.toDecidedPlaceDetailResponse(true));
+            } else{
+                decidedPlaceDetailResponses.add(place.toDecidedPlaceDetailResponse(false));
+
+            }
+        }
+        return decidedPlaceDetailResponses;
+        //return places.stream().map(Place::toDecidedPlaceDetailResponse).collect(Collectors.toList());
     }
 
     @Transactional
@@ -97,9 +107,19 @@ public class PlaceService {
             places.add(place);
         }
 
-        return places.stream()
-                .map(Place::toDecidedPlaceDetailResponse)
-                .collect(Collectors.toList());
+        List<DecidedPlaceDetailResponse> decidedPlaceDetailResponses = new ArrayList<>();
+        for(Place place : places){
+            if(placeLikesRepository.existsByUserIdAndPlace(userId,place)){
+                decidedPlaceDetailResponses.add(place.toDecidedPlaceDetailResponse(true));
+            } else{
+                decidedPlaceDetailResponses.add(place.toDecidedPlaceDetailResponse(false));
+
+            }
+        }
+        return decidedPlaceDetailResponses;
+//        return places.stream()
+//                .map(Place::toDecidedPlaceDetailResponse)
+//                .collect(Collectors.toList());
     }
 
     @Transactional

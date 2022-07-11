@@ -115,11 +115,16 @@ public class Place extends BaseEntity {
         this.link = updatePlaceRequest.getLink();
     }
 
-    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
+    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse(boolean isPlaceLike) {
         return DecidedPlaceDetailResponse.builder()
                 .placeId(id)
                 .seq(seq)
                 .title(title)
+                .isDecision(isDecision)
+                .placeLikesDto(PlaceLikesDto.builder()
+                        .likeCnt((long) placeLikes.size())
+                        .isPlaceLike(isPlaceLike)
+                        .build())
                 .build();
     }
 
@@ -133,6 +138,7 @@ public class Place extends BaseEntity {
                         .likeCnt((long) placeLikes.size())
                         .isPlaceLike(isPlaceLike)
                         .build())
+                .seq(seq)
                 .build();
     }
 
