@@ -121,6 +121,7 @@ public class Place extends BaseEntity {
                 .seq(seq)
                 .title(title)
                 .isDecision(isDecision)
+                .roadNameAddress(roadNameAddress)
                 .placeLikesDto(PlaceLikesDto.builder()
                         .likeCnt((long) placeLikes.size())
                         .isPlaceLike(isPlaceLike)

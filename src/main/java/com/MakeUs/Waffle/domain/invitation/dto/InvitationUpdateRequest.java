@@ -16,7 +16,7 @@ public class InvitationUpdateRequest {
     private String title;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate date;
-    @JsonFormat(pattern = "HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul")
     private LocalTime time;
     private String comment;
     private String invitationPlace;

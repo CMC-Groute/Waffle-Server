@@ -20,7 +20,7 @@ public class PlaceApiController {
     @Resource
     private KakaoRestApiHelper kakaoRestApiHelper;
 
-    @GetMapping(value="/place/search")
+    @PostMapping(value="/place/search")
     public ResponseEntity searchPlaceByKeyword(
             @AuthenticationPrincipal JwtAuthentication token,
             @Valid @RequestBody SearchPlaceRequest searchPlaceRequest) throws Exception {
