@@ -60,6 +60,7 @@ public class UserSignUpRequest {
                 .nickname(nickname)
                 .password(password)
                 .isAgreedMarketing(isAgreedMarketing)
+                .isAgreedAlarm(true)
                 .profileImage(this.getEnumProfileImage(profileImage))
                 .build();
     }

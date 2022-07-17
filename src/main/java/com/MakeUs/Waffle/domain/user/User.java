@@ -47,13 +47,16 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT default false")
     private boolean isDeleted;
 
+    @Column(nullable = false, columnDefinition = "TINYINT default true")
+    private boolean isAgreedAlarm;
+
     private boolean isAgreedMarketing;
 
     @Column(name = "deviceToken")
     private String deviceToken;
 
     @Builder
-    public User(String deviceToken, Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
+    public User(boolean isAgreedAlarm, String deviceToken, Long id, String nickname, String email, String password, ProfileImage profileImage, boolean isDeleted, boolean isAgreedMarketing) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
@@ -63,6 +66,7 @@ public class User extends BaseEntity {
         this.isDeleted = isDeleted;
         this.isAgreedMarketing = isAgreedMarketing;
         this.deviceToken = deviceToken;
+        this.isAgreedAlarm = isAgreedAlarm;
     }
 
     public List<GrantedAuthority> getAuthorities() {
@@ -93,7 +97,11 @@ public class User extends BaseEntity {
     public void updateDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
-        
+
+    public void updateIsAgreeAlarm(boolean isAgreedAlarm) {
+        this.isAgreedAlarm = isAgreedAlarm;
+    }
+
     public UserDetailResponse toUserDetailResponse(){
         return UserDetailResponse.builder()
                 .email(email)
