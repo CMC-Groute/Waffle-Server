@@ -2,6 +2,7 @@ package com.MakeUs.Waffle.domain.place;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceDetailResponse;
@@ -143,8 +144,9 @@ public class Place extends BaseEntity {
                 .build();
     }
 
-    public PlaceDetailResponse toPlaceDetailResponse(){
+    public PlaceDetailResponse toPlaceDetailResponse(PlaceCategoryDto placeCategoryDto){
         return PlaceDetailResponse.builder()
+                .placeCategoryDto(placeCategoryDto)
                 .comment(comment)
                 .link(link)
                 .build();

@@ -4,6 +4,7 @@ import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberReposi
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.InvitationPlaceCategory;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.place.Place;
 import com.MakeUs.Waffle.domain.place.dto.*;
@@ -146,7 +147,10 @@ public class PlaceService {
     public PlaceDetailResponse getDetailPlace(Long userId,Long invitationId, Long placeId){
         invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
-        return place.toPlaceDetailResponse();
+        InvitationPlaceCategory invitationPlaceCategory = invitationPlaceCategoryRepository.findById(place.getPlaceCategoryId()).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE_CATEGORY));
+        PlaceCategoryDto placeCategoryDto = invitationPlaceCategory.toPlaceCategoryDto();
+
+        return place.toPlaceDetailResponse(placeCategoryDto);
     }
 
     @Transactional
