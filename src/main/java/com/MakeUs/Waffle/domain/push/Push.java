@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.push;
 
+import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +37,14 @@ public class Push {
         this.invitationTitle = invitationTitle;
         this.nickName = nickName;
         this.pushType = pushType;
+    }
+
+    public getPushResponse toGetPushResponse(){
+        return getPushResponse.builder()
+                .invitationId(invitationId)
+                .pushType(pushType)
+                .nickName(nickName)
+                .invitationTitle(invitationTitle)
+                .build();
     }
 }

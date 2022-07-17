@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.push.Push;
 import com.MakeUs.Waffle.domain.push.PushType;
+import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import com.MakeUs.Waffle.domain.push.repository.PushRepository;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
@@ -26,6 +27,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
@@ -141,4 +144,8 @@ public class PushService {
         return googleCredential.getAccessToken();
     }
 
+    public List<getPushResponse> getAlarm(Long id) {
+        List<Push> pushes = pushRepository.getByUserId(id);
+        return pushes.stream().map(Push::toGetPushResponse).collect(toList());
+    }
 }
