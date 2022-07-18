@@ -12,19 +12,22 @@ public class DecidedPlaceDetailResponse {
     private String roadNameAddress;
     private Boolean isDecision;
     private PlaceLikesDto placeLikesDto;
-
+    private String longitude;
+    private String latitude;
 
 
     public DecidedPlaceDetailResponse() {
     }
 
     @Builder
-    public DecidedPlaceDetailResponse(Long placeId, String title, Long seq, String roadNameAddress, Boolean isDecision, PlaceLikesDto placeLikesDto) {
+    public DecidedPlaceDetailResponse(Long placeId, String title, Long seq, String roadNameAddress, Boolean isDecision, PlaceLikesDto placeLikesDto, String longitude, String latitude) {
         this.placeId = placeId;
         this.title = title;
         this.seq = seq;
         this.roadNameAddress = roadNameAddress;
         this.isDecision = isDecision;
         this.placeLikesDto = placeLikesDto;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 }

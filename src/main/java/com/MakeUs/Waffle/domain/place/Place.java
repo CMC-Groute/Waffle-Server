@@ -118,6 +118,8 @@ public class Place extends BaseEntity {
 
     public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse(boolean isPlaceLike) {
         return DecidedPlaceDetailResponse.builder()
+                .latitude(latitude)
+                .longitude(longitude)
                 .placeId(id)
                 .seq(seq)
                 .title(title)
@@ -132,6 +134,8 @@ public class Place extends BaseEntity {
 
     public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
         return PlaceByCategoryResponse.builder()
+                .latitude(latitude)
+                .longitude(longitude)
                 .placeId(id)
                 .title(title)
                 .roadNameAddress(roadNameAddress)
