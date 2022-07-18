@@ -25,6 +25,7 @@ public class NotificationRequest {
     @Getter
     public static class Data{
         private String title;
+        private String invitationId;
     }
 
     @Builder
@@ -46,6 +47,7 @@ public class NotificationRequest {
     @Getter
     public static class Aps{
         private String sound;
+        private Long invitationId;
     }
 
     @Builder

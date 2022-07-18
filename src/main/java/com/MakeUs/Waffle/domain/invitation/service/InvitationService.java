@@ -123,7 +123,8 @@ public class InvitationService {
         for (InvitationMember invitationMember : invitationMembers) {
             User nowUser = invitationMember.getUser();
             if (nowUser.isAgreedAlarm()) {
-                pushService.send(nowUser.getDeviceToken(), message, invitationId, invitationTitle, nickName, PushType.ALARM_JOIN, nowUser.getId());
+                String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
+                pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
             }
         }
 

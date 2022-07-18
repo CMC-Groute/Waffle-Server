@@ -42,7 +42,8 @@ public class ScheduledConfig {
             for (InvitationMember invitationMember : invitationMembers) {
                 User nowUser = invitationMember.getUser();
                 if (nowUser.isAgreedAlarm()) {
-                    pushService.send(nowUser.getDeviceToken(), message, invitationId, invitationTitle, null, PushType.ALARM_NOT_DECIDE, nowUser.getId());
+                    String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
+                    pushService.send(alarmMessage, invitationId, invitationTitle, null, PushType.ALARM_LIKES, nowUser.getId());
                 }
             }
         }
@@ -63,8 +64,8 @@ public class ScheduledConfig {
                 String message = nickName + "내일 " + invitationTitle + " 잊지 않았죠? \uD83D\uDE1D";
                 User nowUser = invitationMember.getUser();
                 if (nowUser.isAgreedAlarm()) {
-                    pushService.send(nowUser.getDeviceToken(), message, invitationId, invitationTitle, nickName, PushType.ALARM_BEFORE_DAY, nowUser.getId());
-                }
+                    String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
+                    pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());                }
             }
         }
     }

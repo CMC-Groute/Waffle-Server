@@ -69,14 +69,14 @@ public class PushService {
             User nowUser = invitationMember.getUser();
             if(!nowUser.getId().equals(id)) {
                 if (nowUser.isAgreedAlarm()) {
-                    String alarmMessage = makeMessage(nowUser.getDeviceToken(), message,"dd");
-                    send(nowUser.getDeviceToken(), alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
+                    String alarmMessage = makeMessage(nowUser.getDeviceToken(), message,invitationId);
+                    send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
                 }
             }
         }
     }
 
-    private String makeMessage(String pushToken, String title, String body) {
+    public String makeMessage(String pushToken, String title, Long invitationId) {
 
         NotificationRequest fcmMessage =
                 NotificationRequest.builder()
@@ -86,7 +86,7 @@ public class PushService {
                                         .notification(
                                                 NotificationRequest.Notification.builder()
                                                         .title(title)
-                                                        .body(body)
+                                                        //.body(body)
                                                         .image(null)
                                                         .build())
                                         .android(
@@ -94,6 +94,7 @@ public class PushService {
                                                         .data(
                                                                 NotificationRequest.Data.builder()
                                                                         .title(title)
+                                                                        .invitationId(invitationId.toString())
                                                                         .build()
                                                         )
                                                         .build()
@@ -102,7 +103,9 @@ public class PushService {
                                                 NotificationRequest.Apns.builder()
                                                         .payload(
                                                                 NotificationRequest.Payload.builder()
-                                                                        .aps(NotificationRequest.Aps.builder().sound("default").build())
+                                                                        .aps(NotificationRequest.Aps.builder()
+                                                                                .invitationId(invitationId)
+                                                                                .sound("default").build())
                                                                         .build())
                                                         .build())
                                         .build())
@@ -124,7 +127,7 @@ public class PushService {
     /**
      * HTTP Protocol을 이용한 Push 전송
      */
-    public void send(String deviceToken, String alarmMessage,Long invitationId, String invitationTitle,String nickName, PushType pushType, Long userId) {
+    public void send(String alarmMessage,Long invitationId, String invitationTitle,String nickName, PushType pushType, Long userId) {
         // 2. create token & send push
         try {
             OkHttpClient okHttpClient = new OkHttpClient();
