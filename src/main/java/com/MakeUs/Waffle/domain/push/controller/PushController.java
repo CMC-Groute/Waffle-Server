@@ -22,12 +22,12 @@ public class PushController {
 
     //@Operation(summary = "좋아요 조르기")
     @PostMapping("/invitation/{id}/push/likes")
-    public ResponseEntity<Void> pushLikes(
+    public ResponseEntity<ApiResponse<String>> pushLikes(
             @AuthenticationPrincipal JwtAuthentication token, @PathVariable Long id
     ) {
         pushService.pushLikes(
                 token.getId(), id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.of("전송 완료"));
     }
 
     //알람 조회

@@ -4,74 +4,70 @@ import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
-import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.push.Push;
 import com.MakeUs.Waffle.domain.push.PushType;
 import com.MakeUs.Waffle.domain.push.dto.NotificationRequest;
 import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import com.MakeUs.Waffle.domain.push.repository.PushRepository;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
+import com.MakeUs.Waffle.error.exception.OpenApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.gson.JsonObject;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
+@Slf4j
 public class PushService {
 
     private static final String MESSAGING_SCOPE = "https://www.googleapis.com/auth/firebase.messaging";
     private static final String[] SCOPES = {MESSAGING_SCOPE};
 
     private final InvitationMemberRepository invitationMemberRepository;
-    private final UserRepository userRepository;
-    private final InvitationRepository invitationRepository;
     private final PushRepository pushRepository;
 
     @Value("${fcm.apiurl}")
     private String FCM_API_URL;
     ObjectMapper objectMapper = new ObjectMapper();
-    public PushService(InvitationMemberRepository invitationMemberRepository, UserRepository userRepository, InvitationRepository invitationRepository, PushRepository pushRepository) {
+
+    public PushService(InvitationMemberRepository invitationMemberRepository,PushRepository pushRepository) {
         this.invitationMemberRepository = invitationMemberRepository;
-        this.userRepository = userRepository;
-        this.invitationRepository = invitationRepository;
         this.pushRepository = pushRepository;
     }
 
     public void pushLikes(Long id, Long invitationId) {
-        invitationMemberRepository.findByUserIdAndInvitationId(id,invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
+        //InvitationMember invitationMember1 = invitationMemberRepository.findByUserIdAndInvitationId(id, invitationId).orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
         List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitationId(invitationId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
+        InvitationMember first = invitationMembers.stream().filter(invitationMember -> invitationMember.getUser().getId().equals(id)).findFirst().orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));;
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        User user = first.getUser();
         String nickName = user.getNickname();
-        Invitation invitation = invitationRepository.findById(invitationId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
+        Invitation invitation = first.getInvitation();
         String invitationTitle = invitation.getTitle();
         String message = nickName + "님이 좋아요 조르기를 시전! " + invitationTitle + "을 위해 가고 싶은 장소에 좋아요를 눌러주세요. ❤️\uD83D\uDC47";
-        for(InvitationMember invitationMember : invitationMembers){
+        for (InvitationMember invitationMember : invitationMembers) {
             User nowUser = invitationMember.getUser();
-            if(nowUser.getId()!=id) {
+            if (!nowUser.getId().equals(id)) {
                 if (nowUser.isAgreedAlarm()) {
-                    String alarmMessage = makeMessage(nowUser.getDeviceToken(), message,invitationId);
-                    send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId(),invitation.getInvitationImageCategory());
+                    String alarmMessage = makeMessage(nowUser.getDeviceToken(), message, invitationId);
+                    send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId(), invitation.getInvitationImageCategory());
                 }
             }
         }
@@ -130,34 +126,37 @@ public class PushService {
      */
     public void send(String alarmMessage, Long invitationId, String invitationTitle, String nickName, PushType pushType, Long userId, InvitationImageCategory invitationImageCategory) {
         // 2. create token & send push
+        Response response;
         try {
             OkHttpClient okHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + getAccessToken())
                     .addHeader("Content-Type", "application/json; UTF-8")
                     .url(FCM_API_URL)
-                    .post(RequestBody.create( MediaType.parse("application/json"),alarmMessage))
+                    .post(RequestBody.create(MediaType.parse("application/json"),alarmMessage))
                     .build();
-            Response response = okHttpClient.newCall(request).execute();
+            response = okHttpClient.newCall(request).execute();
 
-            System.out.println(alarmMessage);
-            System.out.println("### response str : " + response.toString());
-            System.out.println("### response result : " + response.isSuccessful());
-            System.out.println("### response message : " + response.message().toString());
-            if(response.isSuccessful()){
-                Push push = Push.builder()
-                        .invitationImageCategory(invitationImageCategory)
-                        .invitationTitle(invitationTitle)
-                        .pushType(pushType)
-                        .nickName(nickName)
-                        .invitationId(invitationId)
-                        .userId(userId)
-                        .build();
+        }catch (IOException e){
+            throw new OpenApiException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
-                pushRepository.save(push);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        log.info("### response result: {}",response.isSuccessful());
+        log.info("### response message: {}",response.message());
+
+        if (response.isSuccessful()) {
+            Push push = Push.builder()
+                    .invitationImageCategory(invitationImageCategory)
+                    .invitationTitle(invitationTitle)
+                    .pushType(pushType)
+                    .nickName(nickName)
+                    .invitationId(invitationId)
+                    .userId(userId)
+                    .build();
+
+            pushRepository.save(push);
+        } else {
+            throw new OpenApiException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
