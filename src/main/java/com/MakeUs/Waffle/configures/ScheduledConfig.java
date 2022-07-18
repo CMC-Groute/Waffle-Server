@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.invitation.service.InvitationService;
 import com.MakeUs.Waffle.domain.push.PushType;
+import com.MakeUs.Waffle.domain.push.repository.PushRepository;
 import com.MakeUs.Waffle.domain.push.service.PushService;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
@@ -22,12 +23,17 @@ public class ScheduledConfig {
 
     private final InvitationRepository invitationRepository;
     private final PushService pushService;
+    private final PushRepository pushRepository;
 
     @Scheduled(cron = "0 1 0 * *  ?")
     public void updateInvitationExpiration() {
         invitationRepository.updateExpire(true, LocalDate.now().minusDays(1));
     }
 
+    @Scheduled(cron = "0 8 0 * *  ?")
+    public void updatePushExpiration() {
+        pushRepository.deleteExpire( LocalDate.now().minusDays(30));
+    }
     //등록 후 7일 이후에도 일시/위치가 미정인 경우
     @Scheduled(cron = "0 2 0 * *  ?")
     public void alertPlaceIsNull() {

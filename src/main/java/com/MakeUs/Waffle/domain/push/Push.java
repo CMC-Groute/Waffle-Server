@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.push;
 
+import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import lombok.AccessLevel;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "push")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Push {
+public class Push extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
