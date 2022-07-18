@@ -174,4 +174,10 @@ public class PushService {
         List<Push> pushes = pushRepository.getByUserId(id);
         return pushes.stream().map(Push::toGetPushResponse).collect(toList());
     }
+
+    public Long updateIsRead(Long userId, Long pushId) {
+        Push push = pushRepository.findById(pushId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PUSH));
+        push.updateIsRead(true);
+        return pushId;
+    }
 }

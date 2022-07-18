@@ -7,10 +7,7 @@ import com.MakeUs.Waffle.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,6 +35,15 @@ public class PushController {
     public ResponseEntity<ApiResponse<List<getPushResponse>>> getAlarm(
             @AuthenticationPrincipal JwtAuthentication token){
         return ResponseEntity.ok(ApiResponse.of(pushService.getAlarm(token.getId())));
+
+    }
+
+    //읽음 바꿈
+    @PatchMapping("/push/{id}")
+    public ResponseEntity<ApiResponse<Long>> updateIsRead(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @PathVariable Long id){
+        return ResponseEntity.ok(ApiResponse.of(pushService.updateIsRead(token.getId(),id)));
 
     }
 }

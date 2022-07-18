@@ -31,7 +31,9 @@ public enum ErrorCode {
 
     OPENAPI_CONN_FAIL("O001", "공공 api 연결에 실패했습니다."),
     ALREADY_EXIST_OPENAPI_CONN("O002", "이미 공공 api 서버에 연결돼있습니다."),
-    UNSUPPORTED_ENCODING("O003", "지원하지 않는 형식으로 인코딩돼있습니다.");
+    UNSUPPORTED_ENCODING("O003", "지원하지 않는 형식으로 인코딩돼있습니다."),
+
+    NOT_FOUND_PUSH("0005","존재하지 않는 알림입니다.");
 
     private final String code;
     private final String message;

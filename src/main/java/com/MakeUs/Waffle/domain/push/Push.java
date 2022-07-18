@@ -51,10 +51,17 @@ public class Push {
 
     public getPushResponse toGetPushResponse(){
         return getPushResponse.builder()
+                .id(id)
+                .invitationImageCategory(invitationImageCategory)
                 .invitationId(invitationId)
                 .pushType(pushType)
                 .nickName(nickName)
                 .invitationTitle(invitationTitle)
+                .isRead(isRead)
                 .build();
+    }
+
+    public void updateIsRead(boolean isRead){
+        this.isRead = isRead;
     }
 }
