@@ -52,7 +52,7 @@ jwt:
   header: token
   issuer: was
   client-secret: ${JWT_SECRET}
-  expiry-seconds: 86400
+  expiry-seconds: 2592000
 open:
   api_key: ${REST_API_KEY}
 fcm:
