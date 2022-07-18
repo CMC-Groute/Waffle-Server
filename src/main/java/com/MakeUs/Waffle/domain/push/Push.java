@@ -1,5 +1,6 @@
 package com.MakeUs.Waffle.domain.push;
 
+import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +20,12 @@ public class Push {
 
     private Long invitationId;
 
+    @Enumerated(EnumType.STRING)
+    private InvitationImageCategory invitationImageCategory;
+
+    @Column(nullable = false, columnDefinition = "TINYINT default false")
+    private boolean isRead;
+
     private Long userId;
 
     @Column(name = "invitation_title", length = 20)
@@ -30,14 +37,17 @@ public class Push {
     private PushType pushType;
 
     @Builder
-    public Push(Long id, Long invitationId, Long userId, String invitationTitle, String nickName, PushType pushType) {
+    public Push(Long id, Long invitationId, InvitationImageCategory invitationImageCategory, boolean isRead, Long userId, String invitationTitle, String nickName, PushType pushType) {
         this.id = id;
         this.invitationId = invitationId;
+        this.invitationImageCategory = invitationImageCategory;
+        this.isRead = isRead;
         this.userId = userId;
         this.invitationTitle = invitationTitle;
         this.nickName = nickName;
         this.pushType = pushType;
     }
+
 
     public getPushResponse toGetPushResponse(){
         return getPushResponse.builder()

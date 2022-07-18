@@ -43,7 +43,7 @@ public class ScheduledConfig {
                 User nowUser = invitationMember.getUser();
                 if (nowUser.isAgreedAlarm()) {
                     String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
-                    pushService.send(alarmMessage, invitationId, invitationTitle, null, PushType.ALARM_LIKES, nowUser.getId());
+                    pushService.send(alarmMessage, invitationId, invitationTitle, null, PushType.ALARM_LIKES, nowUser.getId(),invitation.getInvitationImageCategory());
                 }
             }
         }
@@ -65,7 +65,7 @@ public class ScheduledConfig {
                 User nowUser = invitationMember.getUser();
                 if (nowUser.isAgreedAlarm()) {
                     String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
-                    pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());                }
+                    pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId(),invitation.getInvitationImageCategory());                }
             }
         }
     }

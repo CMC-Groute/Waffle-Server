@@ -3,6 +3,7 @@ package com.MakeUs.Waffle.domain.push.service;
 import com.MakeUs.Waffle.domain.invationMember.InvitationMember;
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.invitation.InvitationImageCategory;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.push.Push;
 import com.MakeUs.Waffle.domain.push.PushType;
@@ -67,10 +68,10 @@ public class PushService {
         String message = nickName + "님이 좋아요 조르기를 시전! " + invitationTitle + "을 위해 가고 싶은 장소에 좋아요를 눌러주세요. ❤️\uD83D\uDC47";
         for(InvitationMember invitationMember : invitationMembers){
             User nowUser = invitationMember.getUser();
-            if(!nowUser.getId().equals(id)) {
+            if(nowUser.getId()!=id) {
                 if (nowUser.isAgreedAlarm()) {
                     String alarmMessage = makeMessage(nowUser.getDeviceToken(), message,invitationId);
-                    send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
+                    send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId(),invitation.getInvitationImageCategory());
                 }
             }
         }
@@ -127,7 +128,7 @@ public class PushService {
     /**
      * HTTP Protocol을 이용한 Push 전송
      */
-    public void send(String alarmMessage,Long invitationId, String invitationTitle,String nickName, PushType pushType, Long userId) {
+    public void send(String alarmMessage, Long invitationId, String invitationTitle, String nickName, PushType pushType, Long userId, InvitationImageCategory invitationImageCategory) {
         // 2. create token & send push
         try {
             OkHttpClient okHttpClient = new OkHttpClient();
@@ -145,6 +146,7 @@ public class PushService {
             System.out.println("### response message : " + response.message().toString());
             if(response.isSuccessful()){
                 Push push = Push.builder()
+                        .invitationImageCategory(invitationImageCategory)
                         .invitationTitle(invitationTitle)
                         .pushType(pushType)
                         .nickName(nickName)
