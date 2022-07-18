@@ -107,6 +107,7 @@ public class User extends BaseEntity {
                 .email(email)
                 .nickname(nickname)
                 .profileImage(profileImage.toString())
+                .isAgreedAlarm(isAgreedAlarm)
                 .build();
     }
 }

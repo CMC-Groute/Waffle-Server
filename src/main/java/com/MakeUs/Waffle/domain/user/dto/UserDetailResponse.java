@@ -15,11 +15,13 @@ public class UserDetailResponse {
     private String nickname;
     private String email;
     private String profileImage;
+    private Boolean isAgreedAlarm;
 
     @Builder
-    public UserDetailResponse(String nickname, String email, String profileImage) {
+    public UserDetailResponse(String nickname, String email, String profileImage, Boolean isAgreedAlarm) {
         this.nickname = nickname;
         this.email = email;
         this.profileImage = profileImage;
+        this.isAgreedAlarm = isAgreedAlarm;
     }
 }
