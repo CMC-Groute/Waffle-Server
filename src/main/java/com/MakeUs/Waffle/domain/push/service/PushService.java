@@ -6,6 +6,7 @@ import com.MakeUs.Waffle.domain.invitation.Invitation;
 import com.MakeUs.Waffle.domain.invitation.repository.InvitationRepository;
 import com.MakeUs.Waffle.domain.push.Push;
 import com.MakeUs.Waffle.domain.push.PushType;
+import com.MakeUs.Waffle.domain.push.dto.NotificationRequest;
 import com.MakeUs.Waffle.domain.push.dto.getPushResponse;
 import com.MakeUs.Waffle.domain.push.repository.PushRepository;
 import com.MakeUs.Waffle.domain.user.User;
@@ -13,6 +14,8 @@ import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -44,7 +47,7 @@ public class PushService {
 
     @Value("${fcm.apiurl}")
     private String FCM_API_URL;
-
+    ObjectMapper objectMapper = new ObjectMapper();
     public PushService(InvitationMemberRepository invitationMemberRepository, UserRepository userRepository, InvitationRepository invitationRepository, PushRepository pushRepository) {
         this.invitationMemberRepository = invitationMemberRepository;
         this.userRepository = userRepository;
@@ -66,44 +69,62 @@ public class PushService {
             User nowUser = invitationMember.getUser();
             if(!nowUser.getId().equals(id)) {
                 if (nowUser.isAgreedAlarm()) {
-                    send(nowUser.getDeviceToken(), message, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
+                    String alarmMessage = makeMessage(nowUser.getDeviceToken(), message,"dd");
+                    send(nowUser.getDeviceToken(), alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_LIKES, nowUser.getId());
                 }
             }
         }
     }
 
+    private String makeMessage(String pushToken, String title, String body) {
+
+        NotificationRequest fcmMessage =
+                NotificationRequest.builder()
+                        .message(
+                                NotificationRequest.Message.builder()
+                                        .token(pushToken)
+                                        .notification(
+                                                NotificationRequest.Notification.builder()
+                                                        .title(title)
+                                                        .body(body)
+                                                        .image(null)
+                                                        .build())
+                                        .android(
+                                                NotificationRequest.Android.builder()
+                                                        .data(
+                                                                NotificationRequest.Data.builder()
+                                                                        .title(title)
+                                                                        .build()
+                                                        )
+                                                        .build()
+                                        )
+                                        .apns(
+                                                NotificationRequest.Apns.builder()
+                                                        .payload(
+                                                                NotificationRequest.Payload.builder()
+                                                                        .aps(NotificationRequest.Aps.builder().sound("default").build())
+                                                                        .build())
+                                                        .build())
+                                        .build())
+                        .validate_only(false)
+                        .build();
+
+
+        String fcmMessageString = "";
+
+        try {
+            fcmMessageString = objectMapper.writeValueAsString(fcmMessage);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return fcmMessageString;
+    }
+
     /**
      * HTTP Protocol을 이용한 Push 전송
-     * @return
-     *
-     *
      */
     public void send(String deviceToken, String alarmMessage,Long invitationId, String invitationTitle,String nickName, PushType pushType, Long userId) {
-        //com.google.gson 사용
-        System.out.println("before sends");
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("token", deviceToken);
-        JsonObject android = new JsonObject();
-        JsonObject data = new JsonObject();
-        data.addProperty("body", alarmMessage);
-        data.addProperty("title", "\uD83D\uDE03타이틀V1");
-        android.add("data",data);
-
-        JsonObject apns = new JsonObject();
-        JsonObject payload = new JsonObject();
-        JsonObject aps = new JsonObject();
-
-        aps.addProperty("body", alarmMessage);
-        aps.addProperty("title", "\uD83D\uDE03타이틀V1");
-        payload.add("aps",aps);
-        apns.add("payload",payload);
-
-        jsonObj.add("android", android);
-        jsonObj.add("apns", apns);
-
-        JsonObject message = new JsonObject();
-        message.add("message", jsonObj);
-
         // 2. create token & send push
         try {
             OkHttpClient okHttpClient = new OkHttpClient();
@@ -111,11 +132,11 @@ public class PushService {
                     .addHeader("Authorization", "Bearer " + getAccessToken())
                     .addHeader("Content-Type", "application/json; UTF-8")
                     .url(FCM_API_URL)
-                    .post(RequestBody.create( MediaType.parse("application/json"),message.toString()))
+                    .post(RequestBody.create( MediaType.parse("application/json"),alarmMessage))
                     .build();
             Response response = okHttpClient.newCall(request).execute();
 
-            System.out.println(message);
+            System.out.println(alarmMessage);
             System.out.println("### response str : " + response.toString());
             System.out.println("### response result : " + response.isSuccessful());
             System.out.println("### response message : " + response.message().toString());
