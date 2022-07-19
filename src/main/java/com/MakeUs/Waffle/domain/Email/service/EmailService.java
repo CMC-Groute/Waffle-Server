@@ -93,7 +93,7 @@ public class EmailService {
 
             String codeWithDash = code.substring(0, 3) + "-" + code.substring(3, 6);
             message.addRecipients(RecipientType.TO, receiver);
-            message.setSubject("Waffle 확인 코드: " + codeWithDash);
+            message.setSubject("Wapple 확인 코드: " + codeWithDash);
 
             String msg = "<head>\n <style>\n @font-face {\n font-family: 'Pretendard-Regular';\n"
                     + "format('woff');\n font-weight: 400;\n font-style: normal;\n }\n "
@@ -102,7 +102,7 @@ public class EmailService {
                     + "</head>\n<body style=\"font-family: Pretendard-Regular\">\n"
                     + "</div>\n\n\n</div>\n\n<div style=\"background-color: white; padding-left: 10%; margin-top: 4.5%\">\n "
                     + "<div>\n <h1 style=\"font-family: Pretendard-ExtraBold;\">이메일 인증 코드 확인</h1>\n </div>\n"
-                    + "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Waffle 이메일 인증란에 입력해주세요.</p>\n"
+                    + "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Wapple 이메일 인증란에 입력해주세요.</p>\n"
                     + "<p style=\"font-family: Pretendard-ExtraBold;\">(해당 코드는 ";
             msg += LocalDateTime.now()
                     .plusMinutes(3)
@@ -112,10 +112,10 @@ public class EmailService {
             msg += "\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
                     + "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
                     + "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
-                    + "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. waffle, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
+                    + "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Wapple, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
 
             message.setText(msg, "utf-8", "html");
-            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "waffle"));
+            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "wapple"));
 
             return message;
         } catch (Exception e) {
@@ -130,11 +130,15 @@ public class EmailService {
         User user = userRepository.findByEmail(temporaryPwRequest.getEmail()).orElseThrow(() -> new NotFoundResourceException(NOT_FOUND_USER));
 
         final String code = getTempPassword();
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(temporaryPwRequest.getEmail());
-        message.setFrom("Waffle");
-        message.setSubject("Waffle 임시 비밀번호 안내 이메일 입니다.");
-        message.setText(user.getNickname() +  " 의 임시 비밀번호는 " + code + "입니다.");
+        MimeMessage message = emailSender.createMimeMessage();
+        try{
+            message.addRecipients(RecipientType.TO, temporaryPwRequest.getEmail());
+            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "wapple"));
+            message.setSubject("Wapple 임시 비밀번호 안내 이메일 입니다.");
+            message.setText(user.getNickname() +  " 의 임시 비밀번호는 " + code + "입니다.");
+        }catch (Exception e){
+            throw new MailSendException(e.getMessage());
+        }
 
         user.updateUserPasswordInfo(passwordEncoder,code);
         emailSender.send(message);
