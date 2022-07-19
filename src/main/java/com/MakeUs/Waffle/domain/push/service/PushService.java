@@ -170,7 +170,7 @@ public class PushService {
     }
 
     public List<getPushResponse> getAlarm(Long id) {
-        List<Push> pushes = pushRepository.getByUserId(id);
+        List<Push> pushes = pushRepository.getByUserIdOrderByCreatedAtDesc(id);
         return pushes.stream().map(Push::toGetPushResponse).collect(toList());
     }
 

@@ -14,6 +14,8 @@ import java.util.List;
 public interface PushRepository extends JpaRepository<Push, Long> {
     List<Push> getByUserId(Long userId);
 
+    List<Push> getByUserIdOrderByCreatedAtDesc(Long userId);
+
     @Transactional
     @Modifying
     @Query("delete from Push p where substring(p.createdAt,1,10) = :date")

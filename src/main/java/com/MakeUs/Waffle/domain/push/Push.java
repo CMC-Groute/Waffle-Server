@@ -59,6 +59,7 @@ public class Push extends BaseEntity {
                 .nickName(nickName)
                 .invitationTitle(invitationTitle)
                 .isRead(isRead)
+                .createAt(getCreatedAt())
                 .build();
     }
 
