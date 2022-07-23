@@ -152,10 +152,11 @@ public class EmailService {
         String str = "";
 
         int idx = 0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             idx = (int) (charSet.length * Math.random());
             str += charSet[idx];
         }
+        str += (int) (10 * Math.random());
         return str;
     }
 }
