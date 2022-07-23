@@ -2,6 +2,7 @@ package com.MakeUs.Waffle.domain.place;
 
 import com.MakeUs.Waffle.domain.BaseEntity;
 import com.MakeUs.Waffle.domain.invitation.Invitation;
+import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceByCategoryResponse;
 import com.MakeUs.Waffle.domain.place.dto.PlaceDetailResponse;
@@ -115,16 +116,26 @@ public class Place extends BaseEntity {
         this.link = updatePlaceRequest.getLink();
     }
 
-    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse() {
+    public DecidedPlaceDetailResponse toDecidedPlaceDetailResponse(boolean isPlaceLike) {
         return DecidedPlaceDetailResponse.builder()
+                .latitude(latitude)
+                .longitude(longitude)
                 .placeId(id)
                 .seq(seq)
                 .title(title)
+                .isDecision(isDecision)
+                .roadNameAddress(roadNameAddress)
+                .placeLikesDto(PlaceLikesDto.builder()
+                        .likeCnt((long) placeLikes.size())
+                        .isPlaceLike(isPlaceLike)
+                        .build())
                 .build();
     }
 
     public PlaceByCategoryResponse toPlaceByCategoryResponse(boolean isPlaceLike){
         return PlaceByCategoryResponse.builder()
+                .latitude(latitude)
+                .longitude(longitude)
                 .placeId(id)
                 .title(title)
                 .roadNameAddress(roadNameAddress)
@@ -133,11 +144,13 @@ public class Place extends BaseEntity {
                         .likeCnt((long) placeLikes.size())
                         .isPlaceLike(isPlaceLike)
                         .build())
+                .seq(seq)
                 .build();
     }
 
-    public PlaceDetailResponse toPlaceDetailResponse(){
+    public PlaceDetailResponse toPlaceDetailResponse(PlaceCategoryDto placeCategoryDto){
         return PlaceDetailResponse.builder()
+                .placeCategoryDto(placeCategoryDto)
                 .comment(comment)
                 .link(link)
                 .build();

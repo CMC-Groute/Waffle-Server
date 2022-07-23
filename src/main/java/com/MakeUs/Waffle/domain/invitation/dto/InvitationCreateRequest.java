@@ -19,7 +19,7 @@ public class InvitationCreateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate date;
 
-    @DateTimeFormat(pattern = "kk:mm:ss")
+    @DateTimeFormat(pattern = "kk:mm")
     private LocalTime time;
 
     private String comment;

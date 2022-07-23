@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class CreatePlaceCategoryResponse {
     Long placeCategoryId;
-    String name;
+    String placeCategoryName;
 
     @Builder
-    public CreatePlaceCategoryResponse(Long placeCategoryId, String name) {
+    public CreatePlaceCategoryResponse(Long placeCategoryId, String placeCategoryName) {
         this.placeCategoryId = placeCategoryId;
-        this.name = name;
+        this.placeCategoryName = placeCategoryName;
     }
 
     public CreatePlaceCategoryResponse() {

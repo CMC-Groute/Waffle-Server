@@ -13,6 +13,8 @@ import com.MakeUs.Waffle.domain.invitationPlaceCategory.dto.PlaceCategoryDto;
 import com.MakeUs.Waffle.domain.invitationPlaceCategory.repository.InvitationPlaceCategoryRepository;
 import com.MakeUs.Waffle.domain.place.dto.DecidedPlaceDetailResponse;
 import com.MakeUs.Waffle.domain.place.service.PlaceService;
+import com.MakeUs.Waffle.domain.push.PushType;
+import com.MakeUs.Waffle.domain.push.service.PushService;
 import com.MakeUs.Waffle.domain.user.User;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
@@ -20,6 +22,7 @@ import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
 import com.MakeUs.Waffle.error.exception.NotFoundResourceException;
 import com.MakeUs.Waffle.error.exception.NotMatchResourceException;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +30,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Getter
+@RequiredArgsConstructor
 public class InvitationService {
 
     private final InvitationRepository invitationRepository;
@@ -38,17 +43,7 @@ public class InvitationService {
     private final InvitationMemberRepository invitationMemberRepository;
     private final InvitationPlaceCategoryRepository invitationPlaceCategoryRepository;
     private final PlaceService placeService;
-
-    public InvitationService(InvitationRepository invitationRepository, UserRepository userRepository,
-                             InvitationMemberRepository invitationMemberRepository,
-                             InvitationPlaceCategoryRepository invitationPlaceCategoryRepository,
-                             PlaceService placeService) {
-        this.invitationRepository = invitationRepository;
-        this.userRepository = userRepository;
-        this.invitationMemberRepository = invitationMemberRepository;
-        this.invitationPlaceCategoryRepository = invitationPlaceCategoryRepository;
-        this.placeService = placeService;
-    }
+    private final PushService pushService;
 
     @Transactional
     public Long createInvitation(Long userId, InvitationCreateRequest invitationCreateRequest) {
@@ -99,8 +94,8 @@ public class InvitationService {
         return str;
     }
 
-    public String getInvitationImageCategory(){
-        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILLA","STRAWBERRY", "MALCHA"};
+    public String getInvitationImageCategory() {
+        String[] stringSet = new String[]{"CHOCO", "BLUEBERRY", "VANILLA", "STRAWBERRY", "MALCHA"};
         int idx = (int) (5 * Math.random());
         return stringSet[idx];
     }
@@ -113,9 +108,27 @@ public class InvitationService {
         Invitation invitation = invitationRepository.findByInvitationCode(invitationCodeRequest.getInvitationCode())
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_MATCH_INVITATION_CODE));
 
-        if(invitationMemberRepository.existsByUserIdAndInvitationId(userId,invitation.getId())){
+        if (invitationMemberRepository.existsByUserIdAndInvitationId(userId, invitation.getId())) {
             throw new DuplicatedResourceException(ErrorCode.DUPLICATE_INVITATION_MEMBER_ERROR);
         }
+
+        //참여 알림 보내기
+        List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitationId(invitation.getId())
+                .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_PLACE));
+
+        Long invitationId = invitation.getId();
+        String invitationTitle = invitation.getTitle();
+        String nickName = user.getNickname();
+        String message = invitationTitle + "에 " + nickName + " 님이 참여했어요. ";
+        for (InvitationMember invitationMember : invitationMembers) {
+            User nowUser = invitationMember.getUser();
+            if(nowUser.getId().equals(userId)) continue;
+            if (nowUser.isAgreedAlarm()) {
+                String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
+                pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_JOIN, nowUser.getId(),invitation.getInvitationImageCategory());
+            }
+        }
+
         InvitationMember invitationMember = InvitationMember.builder()
                 .invitation(invitation)
                 .user(user)
@@ -125,10 +138,10 @@ public class InvitationService {
     }
 
     @Transactional(readOnly = true)
-    public InvitationCodeResponse getInvitationCode(Long userId, Long invitationId){
+    public InvitationCodeResponse getInvitationCode(Long userId, Long invitationId) {
         Invitation invitation = invitationRepository.findById(invitationId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION));
-        InvitationMember invitationMember = invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+        InvitationMember invitationMember = invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId)
                 .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
 
         return InvitationCodeResponse.builder()
@@ -143,7 +156,7 @@ public class InvitationService {
         List<Invitation> invitations = invitationRepository.getByUser(userId);
 
         List<InvitationListResponse> invitationListResponses = new ArrayList<>();
-        for(Invitation invitation : invitations){
+        for (Invitation invitation : invitations) {
             List<InvitationMember> invitationMembers = invitationMemberRepository.findByInvitation(invitation).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_INVITATION_MEMBER));
             List<InvitationMemberDto> invitationMemberDtos = invitationMembers.stream().map(InvitationMember::toInvitationMemberDto).collect(toList());
             invitationListResponses.add(invitation.toInvitationListResponse(invitationMemberDtos));
@@ -165,13 +178,13 @@ public class InvitationService {
 
         List<DecidedPlaceDetailResponse> decidedPlace = placeService.getDecidedPlace(userId, invitationId);
 
-        return invitation.toInvitationDetailResponse(invitationMemberDtos,decidedPlace,placeCategoryDtos);
+        return invitation.toInvitationDetailResponse(invitationMemberDtos, decidedPlace, placeCategoryDtos);
 
     }
 
     @Transactional
-    public Long updateInvitation(Long userId, Long invitationId, InvitationUpdateRequest invitationUpdateRequest){
-        invitationMemberRepository.findByUserIdAndInvitationId(userId,invitationId)
+    public Long updateInvitation(Long userId, Long invitationId, InvitationUpdateRequest invitationUpdateRequest) {
+        invitationMemberRepository.findByUserIdAndInvitationId(userId, invitationId)
                 .orElseThrow(() -> new NotMatchResourceException(ErrorCode.NOT_MATCH_INVITATION_MEMBER));
 
         Invitation invitation = invitationRepository.findById(invitationId)

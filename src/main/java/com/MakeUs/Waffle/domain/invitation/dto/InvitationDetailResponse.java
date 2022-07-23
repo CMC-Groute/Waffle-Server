@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InvitationDetailResponse {
     private String title;
-    @JsonFormat(pattern = "MM월 dd일", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "YYYY년 MM월 dd일", timezone = "Asia/Seoul")
     private LocalDate date;
     @JsonFormat(pattern = "a h시 m분", timezone = "Asia/Seoul")
     private LocalTime time;

@@ -22,5 +22,10 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Invitation m SET m.isExpired =:isExpired  WHERE m.date = :date")
-   void updateExpire(@Param("isExpired") boolean isExpired, @Param("date") LocalDate date);
+    void updateExpire(@Param("isExpired") boolean isExpired, @Param("date") LocalDate date);
+
+    @Query("SELECT b from Invitation b where substring(b.createdAt,1,10) = :date ")
+    List<Invitation> getByCreatedAt(@Param("date") String date);
+
+    List<Invitation> getByDate(@Param("date") LocalDate date);
 }

@@ -92,7 +92,7 @@ public class PlaceController {
     }
 
     //@Operation("summary = "장소 수정하기")
-    @PutMapping("/invitations/{invitationId}/place/{placeId}")
+    @PatchMapping("/invitations/{invitationId}/place/{placeId}")
     public ResponseEntity<ApiResponse<Long>> updatePlace(
             @PathVariable("invitationId") Long invitationId,
             @PathVariable("placeId") Long placeId,

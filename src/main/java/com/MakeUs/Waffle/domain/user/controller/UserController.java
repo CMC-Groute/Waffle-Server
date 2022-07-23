@@ -107,4 +107,14 @@ public class UserController {
                 token.getId()
         )));
     }
+
+    @PatchMapping("/users")
+    public ResponseEntity<ApiResponse<Long>> updateIsAgreeAlarm(
+            @AuthenticationPrincipal JwtAuthentication token,
+            @Valid @RequestBody UserUpdateIsAgreedAlarm userUpdateIsAgreedAlarm
+    ){
+        return ResponseEntity.ok(ApiResponse.of(userService.updateIsAgreeAlarm(
+                token.getId(),userUpdateIsAgreedAlarm
+        )));
+    }
 }

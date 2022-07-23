@@ -2,10 +2,7 @@ package com.MakeUs.Waffle.domain.user.service;
 
 import com.MakeUs.Waffle.domain.invationMember.repository.InvitationMemberRepository;
 import com.MakeUs.Waffle.domain.user.User;
-import com.MakeUs.Waffle.domain.user.dto.UserDetailResponse;
-import com.MakeUs.Waffle.domain.user.dto.UserPasswordRequest;
-import com.MakeUs.Waffle.domain.user.dto.UserSignUpRequest;
-import com.MakeUs.Waffle.domain.user.dto.UserUpdateRequest;
+import com.MakeUs.Waffle.domain.user.dto.*;
 import com.MakeUs.Waffle.domain.user.repository.UserRepository;
 import com.MakeUs.Waffle.error.ErrorCode;
 import com.MakeUs.Waffle.error.exception.DuplicatedResourceException;
@@ -114,5 +111,13 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
 
         return user.toUserDetailResponse();
+    }
+
+    @Transactional
+    public Long updateIsAgreeAlarm(Long id, UserUpdateIsAgreedAlarm userUpdateIsAgreedAlarm) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_USER));
+        user.updateIsAgreeAlarm(userUpdateIsAgreedAlarm.getIsAgreedAlarm());
+
+        return user.getId();
     }
 }
