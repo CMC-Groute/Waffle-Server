@@ -43,6 +43,7 @@ public class Invitation extends BaseEntity {
 
     private LocalTime time;
 
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
     private String invitationCode;

@@ -119,9 +119,10 @@ public class InvitationService {
         Long invitationId = invitation.getId();
         String invitationTitle = invitation.getTitle();
         String nickName = user.getNickname();
-        String message = invitationTitle + "에 " + nickName + " 이 참여했어요. ";
+        String message = invitationTitle + "에 " + nickName + " 님이 참여했어요. ";
         for (InvitationMember invitationMember : invitationMembers) {
             User nowUser = invitationMember.getUser();
+            if(nowUser.getId().equals(userId)) continue;
             if (nowUser.isAgreedAlarm()) {
                 String alarmMessage = pushService.makeMessage(nowUser.getDeviceToken(), message,invitationId);
                 pushService.send(alarmMessage, invitationId, invitationTitle, nickName, PushType.ALARM_JOIN, nowUser.getId(),invitation.getInvitationImageCategory());

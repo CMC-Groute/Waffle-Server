@@ -93,7 +93,7 @@ public class EmailService {
 
             String codeWithDash = code.substring(0, 3) + "-" + code.substring(3, 6);
             message.addRecipients(RecipientType.TO, receiver);
-            message.setSubject("Wapple 확인 코드: " + codeWithDash);
+            message.setSubject("와플 Wapple 확인 코드: " + codeWithDash);
 
             String msg = "<head>\n <style>\n @font-face {\n font-family: 'Pretendard-Regular';\n"
                     + "format('woff');\n font-weight: 400;\n font-style: normal;\n }\n "
@@ -102,7 +102,7 @@ public class EmailService {
                     + "</head>\n<body style=\"font-family: Pretendard-Regular\">\n"
                     + "</div>\n\n\n</div>\n\n<div style=\"background-color: white; padding-left: 10%; margin-top: 4.5%\">\n "
                     + "<div>\n <h1 style=\"font-family: Pretendard-ExtraBold;\">이메일 인증 코드 확인</h1>\n </div>\n"
-                    + "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Wapple 이메일 인증란에 입력해주세요.</p>\n"
+                    + "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 와플 Wapple 이메일 인증란에 입력해주세요.</p>\n"
                     + "<p style=\"font-family: Pretendard-ExtraBold;\">(해당 코드는 ";
             msg += LocalDateTime.now()
                     .plusMinutes(3)
@@ -115,7 +115,7 @@ public class EmailService {
                     + "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Wapple, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
 
             message.setText(msg, "utf-8", "html");
-            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "wapple"));
+            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "와플 Wapple"));
 
             return message;
         } catch (Exception e) {
@@ -133,8 +133,8 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
         try{
             message.addRecipients(RecipientType.TO, temporaryPwRequest.getEmail());
-            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "wapple"));
-            message.setSubject("Wapple 임시 비밀번호 안내 이메일 입니다.");
+            message.setFrom(new InternetAddress("waffle.mailg@gmail.com", "와플 Wapple"));
+            message.setSubject("와플 Wapple 임시 비밀번호 안내 이메일 입니다.");
             message.setText(user.getNickname() +  " 의 임시 비밀번호는 " + code + "입니다.");
         }catch (Exception e){
             throw new MailSendException(e.getMessage());

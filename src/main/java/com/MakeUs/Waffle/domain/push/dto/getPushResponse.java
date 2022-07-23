@@ -19,7 +19,7 @@ public class getPushResponse {
     private String nickName;
     private PushType pushType;
     private InvitationImageCategory invitationImageCategory;
-    @JsonFormat(pattern = "YYYY-MM월-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime createAt;
     private boolean isRead;
 
